@@ -170,15 +170,9 @@
   animation-play-state: paused;
 }
 
-/* Preloader: si ya se vio en esta sesión o con movimiento reducido, no se muestra */
+/* Preloader: si ya se vio en esta sesión, no se muestra */
 html[data-preloaded] .preloader {
   display: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none;
-  }
 }
 
 /* Progreso del cambio automático de rubro en el hero */

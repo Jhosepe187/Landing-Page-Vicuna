@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactLenis, useLenis } from "lenis/react";
-import { MotionConfig, useReducedMotion } from "motion/react";
+import { MotionConfig } from "motion/react";
 import { useEffect, type ReactNode } from "react";
 import { gsap, ScrollTrigger } from "@/lib/gsap";
 
@@ -19,17 +19,13 @@ function LenisGsapBridge() {
 }
 
 export function Providers({ children }: { children: ReactNode }) {
-  const reduced = useReducedMotion();
+  // reducedMotion="never": las animaciones se ven igual en todos los equipos, aunque el sistema tenga "reducir movimiento".
   return (
-    <MotionConfig reducedMotion="user" transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.7 }}>
-      {reduced ? (
-        children
-      ) : (
-        <ReactLenis root options={{ lerp: 0.075, wheelMultiplier: 1, anchors: { offset: -96 }, autoRaf: false }}>
-          <LenisGsapBridge />
-          {children}
-        </ReactLenis>
-      )}
+    <MotionConfig reducedMotion="never" transition={{ ease: [0.16, 1, 0.3, 1], duration: 0.7 }}>
+      <ReactLenis root options={{ lerp: 0.075, wheelMultiplier: 1, anchors: { offset: -96 }, autoRaf: false }}>
+        <LenisGsapBridge />
+        {children}
+      </ReactLenis>
     </MotionConfig>
   );
 }

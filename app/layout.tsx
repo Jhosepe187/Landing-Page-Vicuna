@@ -30,7 +30,7 @@ export const viewport: Viewport = {
 };
 
 // Marca la sesión antes de pintar para no repetir el preloader ni mostrarlo con movimiento reducido.
-const preloadFlag = `try{if(sessionStorage.getItem("vicuna-preloaded")||matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.setAttribute("data-preloaded","")}}catch(e){}`;
+const preloadFlag = `try{if(sessionStorage.getItem("vicuna-preloaded")){document.documentElement.setAttribute("data-preloaded","")}}catch(e){}`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

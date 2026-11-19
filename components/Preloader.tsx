@@ -28,7 +28,7 @@ export function Preloader() {
   const setPhase = useScene((s) => s.setPhase);
   const lenis = useLenis();
 
-  // ¿Ya se vio en esta sesión o hay movimiento reducido? (atributo puesto antes de pintar)
+  // ¿Ya se vio en esta sesión? (atributo puesto antes de pintar)
   useEffect(() => {
     if (document.documentElement.hasAttribute("data-preloaded")) {
       setActive(false);

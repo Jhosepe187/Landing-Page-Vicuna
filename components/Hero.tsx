@@ -201,7 +201,7 @@ export function Hero() {
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
-      mm.add("(prefers-reduced-motion: no-preference) and (min-width: 1024px)", () => {
+      mm.add("(min-width: 1024px)", () => {
         const tl = gsap.timeline({
           defaults: { ease: "none" },
           scrollTrigger: {

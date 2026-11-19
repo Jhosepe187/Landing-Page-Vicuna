@@ -6,7 +6,6 @@ import {
   motion,
   useInView,
   useMotionValue,
-  useReducedMotion,
   useSpring,
   useTransform,
 } from "motion/react";
@@ -104,16 +103,15 @@ function TiltCard({
 function CountUp({ to, className }: { to: number; className?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
-  const reduced = useReducedMotion();
   const [v, setV] = useState(to);
   useEffect(() => {
-    if (!reduced) setV(0);
-  }, [reduced]);
+    setV(0);
+  }, []);
   useEffect(() => {
-    if (!inView || reduced) return;
+    if (!inView) return;
     const c = animate(0, to, { duration: 1.8, ease: EASE, onUpdate: (x) => setV(Math.round(x)) });
     return () => c.stop();
-  }, [inView, reduced, to]);
+  }, [inView, to]);
   return (
     <span ref={ref} className={cn("tabular-nums", className)}>
       {v}

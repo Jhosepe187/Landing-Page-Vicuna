@@ -74,15 +74,10 @@ export function Clients() {
         </p>
       </div>
 
-      <div className="marquee mt-14 space-y-4 [mask-image:linear-gradient(90deg,transparent,#000_7%,#000_93%,transparent)] motion-reduce:hidden">
+      <div className="marquee mt-14 space-y-4 [mask-image:linear-gradient(90deg,transparent,#000_7%,#000_93%,transparent)]">
         <Row items={rowA} duration="54s" />
         <Row items={rowB} duration="62s" reverse />
       </div>
-      <ul className="mx-auto mt-12 hidden max-w-[1240px] grid-cols-2 gap-4 px-6 sm:grid-cols-3 sm:px-8 motion-reduce:grid">
-        {clients.map((c) => (
-          <Tile key={c.name} c={c} />
-        ))}
-      </ul>
     </section>
   );
 }
