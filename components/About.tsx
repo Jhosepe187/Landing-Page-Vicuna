@@ -1,9 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import { ArrowRight, Eye, HeartHandshake, Target } from "lucide-react";
+import { Eye, HeartHandshake, Target } from "lucide-react";
 import {
-  AnimatePresence,
   animate,
   motion,
   useInView,
@@ -11,13 +9,12 @@ import {
   useReducedMotion,
   useSpring,
   useTransform,
-  type MotionValue,
 } from "motion/react";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { about, clients, site, specialties, type PillarId } from "@/content/site";
-import { categories, projects, type ProjectCategory } from "@/content/projects";
+import { projects } from "@/content/projects";
 import { cn, HEX_CLIP } from "@/lib/utils";
-import { ScrollTopo, SectionTitle, TopoLines, useScrollTo } from "./ui";
+import { ScrollTopo, SectionTitle, TopoLines } from "./ui";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const CYCLE_MS = 6000;
@@ -125,256 +122,110 @@ function CountUp({ to, className }: { to: number; className?: string }) {
 }
 
 /* ------------------------------------------------------------------ */
-/* 1. Misión · Visión · Propósito (tarjeta petróleo)                    */
+/* Misión · Visión · Propósito: tres tarjetas en fila, colores alternos */
 /* ------------------------------------------------------------------ */
+type Tone = "dark" | "light";
+
 function PillarCard({
+  index,
+  tone,
   active,
-  onPick,
   auto,
   paused,
-  setPaused,
+  onActivate,
 }: {
-  active: number;
-  onPick: (i: number) => void;
+  index: number;
+  tone: Tone;
+  active: boolean;
   auto: boolean;
   paused: boolean;
-  setPaused: (v: boolean) => void;
+  onActivate: () => void;
 }) {
-  const pillar = about.pillars[active];
+  const pillar = about.pillars[index];
   const Icon = ICONS[pillar.id];
-  const scrollTo = useScrollTo();
+  const dark = tone === "dark";
   const words = pillar.text.flatMap((seg, si) =>
     seg.t
       .split(/(\s+)/)
       .filter(Boolean)
       .map((w, wi) => ({ w, hl: !!seg.hl, key: `${si}-${wi}` })),
   );
+  const base = 0.35 + index * 0.15;
 
   return (
     <TiltCard
-      index={0}
-      className="on-dark flex min-h-[520px] flex-col bg-petroleo p-8 text-white sm:p-10"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      index={index}
+      glareColor={dark ? "rgb(255 255 255 / 0.12)" : "rgb(120 176 200 / 0.18)"}
+      onMouseEnter={onActivate}
+      className={cn(
+        "flex flex-col p-8 lg:min-h-[460px] transition-shadow duration-500 sm:p-10",
+        dark
+          ? "on-dark bg-petroleo text-white"
+          : "bg-white text-petroleo shadow-[inset_0_0_0_1px_var(--color-linea),0_30px_60px_-40px_rgb(0_54_71/0.35)]",
+        active && (dark ? "shadow-[0_40px_80px_-40px_rgb(0_54_71/0.75)]" : "shadow-[inset_0_0_0_1px_var(--color-celeste),0_40px_80px_-40px_rgb(0_54_71/0.45)]"),
+      )}
     >
-      <TopoLines opacity={0.12} seed={31} lines={18} />
-      <div className="relative" style={{ transform: "translateZ(30px)" }}>
-        <div role="tablist" aria-label="Misión, visión y propósito" className="glass-dark relative grid grid-cols-3 rounded-full p-1">
-          {about.pillars.map((p, i) => {
-            const on = i === active;
-            return (
-              <button
-                key={p.id}
-                type="button"
-                role="tab"
-                aria-selected={on}
-                aria-controls="pilar-panel"
-                onClick={() => onPick(i)}
-                className="relative h-10 overflow-hidden rounded-full text-[13px] font-bold"
-              >
-                {on && (
-                  <motion.span
-                    layoutId="pillar-pill"
-                    className="absolute inset-0 rounded-full bg-white"
-                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
-                  />
-                )}
-                {on && auto && (
-                  <span
-                    key={`${p.id}-${paused}`}
-                    aria-hidden
-                    className="absolute right-4 bottom-1 left-4 h-[2px] origin-left rounded-full bg-vicuna/70"
-                    style={{
-                      animation: paused ? "none" : `rubro-progress ${CYCLE_MS}ms linear forwards`,
-                      transform: paused ? "scaleX(0)" : undefined,
-                    }}
-                  />
-                )}
-                <span className={cn("relative transition-colors duration-300", on ? "text-petroleo" : "text-niebla hover:text-white")}>
-                  {p.label}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      <TopoLines opacity={dark ? 0.12 : 0.1} seed={31 + index * 7} lines={18} color={dark ? undefined : "var(--color-pizarra)"} />
 
-      <div id="pilar-panel" role="tabpanel" aria-live="polite" className="relative mt-10 flex-1" style={{ transform: "translateZ(50px)" }}>
-        <AnimatePresence mode="wait">
-          <motion.div key={pillar.id} exit={{ opacity: 0, y: -12, filter: "blur(6px)" }} transition={{ duration: 0.35 }}>
-            <motion.div
-              initial={{ scale: 0.4, rotate: -30, opacity: 0 }}
-              animate={{ scale: 1, rotate: 0, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 260, damping: 18 }}
-              className="grid h-12 w-14 place-items-center bg-white/10 text-celeste"
-              style={{ clipPath: HEX_CLIP }}
-            >
-              <Icon className="size-6" aria-hidden />
-            </motion.div>
-            <p className="mt-6 text-[clamp(19px,1.55vw,23px)] leading-[1.38] font-semibold">
-              <motion.span
-                className="inline-block"
-                initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: EASE }}
-              >
-                {pillar.lead}
-              </motion.span>{" "}
-              {words.map(({ w, hl, key }, i) =>
-                /^\s+$/.test(w) ? (
-                  <span key={key}>{w}</span>
-                ) : (
-                  <motion.span
-                    key={key}
-                    className={cn("inline-block", hl ? "text-celeste" : "text-white")}
-                    initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
-                    animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                    transition={{ duration: 0.55, delay: 0.08 + i * 0.022, ease: EASE }}
-                  >
-                    {w}
-                  </motion.span>
-                ),
-              )}
-            </p>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      <button
-        type="button"
-        onClick={() => scrollTo("especialidades")}
-        style={{ transform: "translateZ(40px)" }}
-        className="relative mt-8 flex h-14 items-center justify-center gap-2 rounded-full bg-white/10 text-[15px] font-bold text-white shadow-[inset_0_0_0_1px_rgb(120_176_200/0.3)] transition-colors duration-300 hover:bg-white/20"
+      <motion.div
+        className="relative flex flex-1 flex-col"
+        animate={{ y: active ? -6 : 0 }}
+        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        style={{ z: 50 }}
       >
-        Ver especialidades
-        <ArrowRight className="size-4" aria-hidden />
-      </button>
-    </TiltCard>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* 2. Foto enlazada al pilar activo, con parallax y etiqueta de vidrio  */
-/* ------------------------------------------------------------------ */
-function ParallaxImage({ src, alt, sx, sy }: { src: string; alt: string; sx: MotionValue<number>; sy: MotionValue<number> }) {
-  const x = useTransform(sx, [-1, 1], ["4%", "-4%"]);
-  const y = useTransform(sy, [-1, 1], ["3%", "-3%"]);
-  return (
-    <motion.div style={{ x, y }} className="absolute inset-[-6%]">
-      <Image src={src} alt={alt} fill sizes="(max-width: 1024px) 100vw, 33vw" className="object-cover" />
-    </motion.div>
-  );
-}
-
-function PhotoCard({ active }: { active: number }) {
-  const pillar = about.pillars[active];
-  const { rotateX, rotateY, sx, sy, handlers } = useTilt(8);
-  const tagX = useTransform(sx, [-1, 1], [-14, 14]);
-  const tagY = useTransform(sy, [-1, 1], [-8, 8]);
-  return (
-    <Rise index={1}>
-      <motion.figure
-        {...handlers}
-        style={{ rotateX, rotateY, transformPerspective: 1400, transformStyle: "preserve-3d" }}
-        className="relative m-0 h-full min-h-[520px] overflow-hidden rounded-[var(--radius-card)] bg-pizarra"
-      >
-        <AnimatePresence initial={false}>
+        <div className="flex items-center justify-between">
           <motion.div
-            key={pillar.id}
-            className="absolute inset-0"
-            initial={{ opacity: 0, scale: 1.15, filter: "blur(8px)" }}
-            animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.1, ease: EASE }}
+            initial={{ scale: 0.4, rotate: -30, opacity: 0 }}
+            whileInView={{ scale: 1, rotate: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ type: "spring", stiffness: 260, damping: 18, delay: base }}
+            className={cn("grid h-12 w-14 place-items-center", dark ? "bg-white/10 text-celeste" : "bg-vicuna/10 text-vicuna")}
+            style={{ clipPath: HEX_CLIP }}
           >
-            <ParallaxImage src={pillar.image} alt={pillar.alt} sx={sx} sy={sy} />
+            <Icon className="size-6" aria-hidden />
           </motion.div>
-        </AnimatePresence>
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_35_48/0.25)_0%,transparent_30%,transparent_65%,rgb(0_35_48/0.55)_100%)]"
-        />
-        {/* Etiqueta de liquid glass que flota sobre la foto */}
-        <motion.figcaption style={{ x: tagX, y: tagY }} className="absolute inset-x-0 top-7 flex justify-center">
-          <AnimatePresence mode="wait">
-            <motion.span
-              key={pillar.tag}
-              initial={{ opacity: 0, y: -10, scale: 0.92 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 10, scale: 0.92 }}
-              transition={{ duration: 0.45, ease: EASE }}
-              className="rounded-full border border-white/55 bg-white/15 px-7 py-3 text-[15px] font-bold text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.6),0_14px_30px_-14px_rgb(0_20_28/0.6)] backdrop-blur-xl"
-            >
-              {pillar.tag}
-            </motion.span>
-          </AnimatePresence>
-        </motion.figcaption>
-      </motion.figure>
-    </Rise>
-  );
-}
+          <span aria-hidden className={cn("display text-[15px] tracking-[0.2em]", dark ? "text-white/35" : "text-pizarra/45")}>
+            0{index + 1}
+          </span>
+        </div>
 
-/* ------------------------------------------------------------------ */
-/* 3. Obras del brochure por tipo: contador + barras de hexágonos       */
-/* ------------------------------------------------------------------ */
-const SLOTS = 8;
+        <h3 className={cn("display mt-8 text-[clamp(36px,3.2vw,48px)] leading-none", dark ? "text-white" : "text-petroleo")}>
+          {pillar.label}
+        </h3>
 
-function WorksCard() {
-  const rows = categories
-    .filter((c): c is { id: ProjectCategory; label: string } => c.id !== "todos")
-    .map((c) => ({ ...c, label: c.id === "ingenieria" ? "Ingeniería" : c.label, n: projects.filter((p) => p.category === c.id).length }));
-  const [hover, setHover] = useState<ProjectCategory | null>(null);
-
-  return (
-    <TiltCard
-      index={2}
-      glareColor="rgb(120 176 200 / 0.18)"
-      className="flex min-h-[520px] flex-col bg-white p-8 shadow-[inset_0_0_0_1px_var(--color-linea),0_30px_60px_-40px_rgb(0_54_71/0.35)] sm:p-10"
-    >
-      <div style={{ transform: "translateZ(40px)" }}>
-        <p className="display text-[clamp(64px,6vw,92px)] leading-none text-petroleo">
-          <CountUp to={projects.length} />
+        <p className="mt-5 text-[clamp(17px,1.35vw,20px)] leading-[1.45] font-semibold">
+          {words.map(({ w, hl, key }, i) =>
+            /^\s+$/.test(w) ? (
+              <span key={key}>{w}</span>
+            ) : (
+              <motion.span
+                key={key}
+                className={cn("inline-block", hl ? (dark ? "text-celeste" : "text-vicuna") : dark ? "text-white" : "text-petroleo")}
+                initial={{ opacity: 0, y: 14, filter: "blur(6px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.55, delay: base + 0.1 + i * 0.022, ease: EASE }}
+              >
+                {w}
+              </motion.span>
+            ),
+          )}
         </p>
-        <h3 className="mt-3 text-[15px] font-bold text-petroleo">Obras destacadas en el brochure</h3>
-        <p className="mt-3 max-w-[38ch] text-[15px] leading-relaxed text-carbon">
-          Vivienda, edificios, comercio y estudios de campo en Cajamarca, Lambayeque, La Libertad y Lima.
-        </p>
+      </motion.div>
+
+      {/* Progreso de la rotación automática: indica qué pilar está destacado */}
+      <div aria-hidden className={cn("relative mt-8 h-[3px] overflow-hidden rounded-full", dark ? "bg-white/10" : "bg-linea")}>
+        {active && (
+          <span
+            key={`${pillar.id}-${paused}-${auto}`}
+            className={cn("absolute inset-0 origin-left rounded-full", dark ? "bg-celeste" : "bg-vicuna")}
+            style={{
+              animation: auto && !paused ? `rubro-progress ${CYCLE_MS}ms linear forwards` : "none",
+              transform: auto && !paused ? undefined : "scaleX(1)",
+            }}
+          />
+        )}
       </div>
-      <ul className="mt-auto space-y-3 pt-8" style={{ transform: "translateZ(30px)" }}>
-        {rows.map((r, ri) => {
-          const on = hover === r.id;
-          return (
-            <li
-              key={r.id}
-              onMouseEnter={() => setHover(r.id)}
-              onMouseLeave={() => setHover(null)}
-              className={cn(
-                "grid grid-cols-[minmax(0,1fr)_auto_1.5rem] items-center gap-3 rounded-lg px-2 py-1.5 transition-colors duration-300",
-                on && "bg-humo",
-              )}
-            >
-              <span className={cn("truncate text-[14px] font-semibold transition-colors", on ? "text-vicuna" : "text-carbon")}>{r.label}</span>
-              <span className="flex gap-1.5" aria-hidden>
-                {Array.from({ length: SLOTS }, (_, i) => {
-                  const filled = i < r.n;
-                  return (
-                    <motion.span
-                      key={i}
-                      className={cn("block h-[11px] w-[12.7px] transition-colors duration-300", filled ? (on ? "bg-celeste" : "bg-vicuna") : "bg-linea")}
-                      style={{ clipPath: HEX_CLIP }}
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: on && filled ? 1.25 : 1, opacity: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.45, delay: on ? 0 : 0.5 + ri * 0.15 + i * 0.05, ease: EASE }}
-                    />
-                  );
-                })}
-              </span>
-              <span className="text-right text-[14px] font-bold text-petroleo tabular-nums">{r.n}</span>
-            </li>
-          );
-        })}
-      </ul>
     </TiltCard>
   );
 }
@@ -396,7 +247,7 @@ export function About() {
 
   const stats = [
     { n: specialties.length, label: "Especialidades" },
-    { n: projects.length, label: "Obras destacadas" },
+    { n: projects.length, label: "Obras destacadas", suffix: "+" },
     { n: clients.length, label: "Clientes aliados" },
     { n: site.offices.length, label: site.offices.map((o) => o.city).join(" · "), suffix: " Sedes" },
   ];
@@ -425,19 +276,25 @@ export function About() {
           </motion.p>
         </div>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          <PillarCard
-            active={active}
-            onPick={(i) => {
-              setAuto(false);
-              setActive(i);
-            }}
-            auto={auto}
-            paused={paused}
-            setPaused={setPaused}
-          />
-          <PhotoCard active={active} />
-          <WorksCard />
+        <div
+          className="mt-14 grid gap-6 lg:grid-cols-3"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+        >
+          {about.pillars.map((p, i) => (
+            <PillarCard
+              key={p.id}
+              index={i}
+              tone={i % 2 === 0 ? "dark" : "light"}
+              active={i === active}
+              auto={auto}
+              paused={paused}
+              onActivate={() => {
+                setAuto(false);
+                setActive(i);
+              }}
+            />
+          ))}
         </div>
 
         <dl className="mt-20 grid grid-cols-2 gap-y-12 lg:grid-cols-4">
