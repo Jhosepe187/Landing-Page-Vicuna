@@ -15,6 +15,7 @@ export const site = {
 
 export const nav = [
   { id: "proyectos", label: "Proyectos" },
+  { id: "nosotros", label: "Nosotros" },
   { id: "especialidades", label: "Especialidades" },
   { id: "clientes", label: "Clientes" },
   { id: "contacto", label: "Contacto" },
@@ -103,3 +104,68 @@ export const clients: { name: string; logo: string; width: number; height: numbe
   { name: "Regianz", logo: "/media/clients/regianz.png", width: 376, height: 157 },
   { name: "Fidamar", logo: "/media/clients/fidamar.png", width: 338, height: 51 },
 ];
+
+/* Misión, visión y propósito: textos literales del Brochure 2027 (p. 02–03). */
+export type PillarId = "mision" | "vision" | "proposito";
+
+export const about: {
+  intro: string;
+  pillars: {
+    id: PillarId;
+    label: string;
+    lead: string;
+    text: { t: string; hl?: boolean }[];
+    image: string;
+    alt: string;
+    tag: string;
+  }[];
+} = {
+  intro:
+    "Somos una empresa consultora y ejecutora especializada en ingeniería, arquitectura y gestión de obras. Brindamos servicios integrales, desde estudios y expedientes técnicos hasta la supervisión y ejecución de proyectos, con calidad, cumplimiento normativo y eficiencia.",
+  pillars: [
+    {
+      id: "mision",
+      label: "Misión",
+      lead: "Nuestra misión:",
+      text: [
+        { t: "ofrecer soluciones integrales en arquitectura, ingeniería y construcción con " },
+        { t: "excelencia técnica", hl: true },
+        { t: ", cumpliendo plazos y normativas para el sector " },
+        { t: "público y privado.", hl: true },
+      ],
+      image: "/media/field/topografia-estacion-total.jpg",
+      alt: "Ingeniero de Vicuña operando una estación total en campo",
+      tag: "Excelencia técnica",
+    },
+    {
+      id: "vision",
+      label: "Visión",
+      lead: "Nuestra visión:",
+      text: [
+        { t: "ser la empresa consultora " },
+        { t: "líder a nivel nacional", hl: true },
+        { t: ", reconocida por su alta confiabilidad y como " },
+        { t: "aliada estratégica", hl: true },
+        { t: " en grandes proyectos." },
+      ],
+      image: "/media/field/ingeniero-paisaje-andino.jpg",
+      alt: "Profesional de Vicuña con chaleco de la empresa frente a la cordillera",
+      tag: "Equipo en campo",
+    },
+    {
+      id: "proposito",
+      label: "Propósito",
+      lead: "Nuestro propósito:",
+      text: [
+        { t: "ejecutar " },
+        { t: "obras seguras y funcionales", hl: true },
+        { t: " con un equipo multidisciplinario, impulsando el " },
+        { t: "desarrollo sostenible", hl: true },
+        { t: " y la confianza de nuestros clientes." },
+      ],
+      image: "/media/field/obra-terminada-nave.jpg",
+      alt: "Nave comercial terminada con mezzanine vidriado",
+      tag: "Obra terminada",
+    },
+  ],
+};
