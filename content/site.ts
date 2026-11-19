@@ -1,5 +1,5 @@
 export const site = {
-  name: "Vicuña Ingenieros",
+  name: "Vicuna Ingenieros",
   descriptor: "Consultoría & Construcción",
   tagline: "Construyendo sueños, transformando realidades",
   // Dominio pendiente de confirmar (el brochure escribe "vicunaingerieros.com").
@@ -40,6 +40,26 @@ export const rubros: { id: Rubro; label: string; lens: string }[] = [
   { id: "mineria", label: "Minería", lens: "Bocaminas, socavones y redes de conducción" },
 ];
 
+/** Pieza 3D de cada rubro (renders exportados de Canva, recortados y optimizados a WebP). */
+export type Model3D = {
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  /** Cómo se apoya la pieza en el panel: "ground" se asienta en el borde inferior, "float" flota. */
+  stance: "ground" | "float";
+};
+
+export type SpecialtyDetail = {
+  /** Texto largo del brochure (p. 05–07). */
+  intro: string[];
+  services: { title: string; text: string }[];
+  /** Proyectos del portafolio (ids de content/projects.ts) que ilustran el rubro. */
+  projectIds: string[];
+  /** Fotos de campo adicionales cuando el rubro no tiene proyectos en el portafolio. */
+  gallery?: { src: string; alt: string; caption: string }[];
+};
+
 export const specialties: {
   id: Rubro;
   title: string;
@@ -48,6 +68,8 @@ export const specialties: {
   image: string;
   alt: string;
   projectType: ProjectType;
+  model: Model3D;
+  detail: SpecialtyDetail;
 }[] = [
   {
     id: "arquitectura",
@@ -60,8 +82,31 @@ export const specialties: {
       "Acabados en drywall, melamine y termomuros",
     ],
     image: "/media/field/arquitectura-casa-piscina.jpg",
-    alt: "Render de casa de campo con piscina diseñada por Vicuña Ingenieros",
+    alt: "Render de casa de campo con piscina diseñada por Vicuna Ingenieros",
     projectType: "vivienda",
+    model: { src: "/media/3d/edificio.webp", width: 653, height: 1041, alt: "Edificio residencial en 3D", stance: "ground" },
+    detail: {
+      intro: [
+        "Desarrollo integral de proyectos arquitectónicos para edificios, hoteles y locales comerciales, complementado con diseño especializado de interiores y exteriores.",
+        "Además ejecutamos acabados de alta calidad en drywall, melamine y termomuros: acompañamos el proyecto desde la idea y el expediente hasta la entrega de obra.",
+      ],
+      services: [
+        { title: "Proyectos arquitectónicos", text: "Viviendas, edificios multifamiliares, hoteles y locales comerciales, de la idea al expediente." },
+        { title: "Diseño de interiores", text: "Distribución, mobiliario y acabados pensados para el uso real de cada ambiente." },
+        { title: "Diseño de exteriores", text: "Fachadas, terrazas, piscinas y paisajismo que dan carácter al proyecto." },
+        { title: "Drywall", text: "Tabiquería, cielos rasos y soluciones livianas de rápida ejecución." },
+        { title: "Melamine", text: "Carpintería a medida: closets, cocinas y muebles empotrados." },
+        { title: "Termomuros", text: "Muros térmicos para confort y eficiencia en climas fríos." },
+      ],
+      projectIds: [
+        "casa-campo-la-molina",
+        "edificio-pimentel",
+        "edificio-trujillo",
+        "multifamiliar-banos-del-inca",
+        "unifamiliar-chiclayo",
+        "unifamiliar-huaraclla",
+      ],
+    },
   },
   {
     id: "ingenieria",
@@ -74,8 +119,24 @@ export const specialties: {
       "Movimiento de tierras y topografía de alta precisión",
     ],
     image: "/media/field/topografia-estacion-total.jpg",
-    alt: "Ingeniero de Vicuña operando una estación total en campo",
+    alt: "Ingeniero de Vicuna operando una estación total en campo",
     projectType: "infraestructura",
+    model: { src: "/media/3d/dron.webp", width: 1013, height: 604, alt: "Dron de levantamiento topográfico en 3D", stance: "float" },
+    detail: {
+      intro: [
+        "Desarrollamos y supervisamos proyectos integrales para el sector público y privado, abarcando desde perfiles y expedientes técnicos hasta la ejecución de obras.",
+        "Asimismo, brindamos servicios especializados en mantenimiento, remodelaciones, movimiento de tierras y topografía de alta precisión, con experiencia en edificación, infraestructura, saneamiento, educación y salud.",
+      ],
+      services: [
+        { title: "Perfiles y expedientes técnicos", text: "Estudios de preinversión e ingeniería de detalle bajo la normativa vigente." },
+        { title: "Ejecución de obras", text: "Edificación, saneamiento, educación y salud, cumpliendo plazos y presupuesto." },
+        { title: "Supervisión de obras", text: "Control técnico, de calidad y de seguridad en cada etapa del proyecto." },
+        { title: "Mantenimiento y remodelaciones", text: "Puesta en valor y adecuación de infraestructura existente." },
+        { title: "Movimiento de tierras", text: "Cortes, rellenos, nivelación y plataformas." },
+        { title: "Topografía de alta precisión", text: "Levantamientos con estación total, GNSS y drones." },
+      ],
+      projectIds: ["comercial-lurin", "estudios-ie-yanamango", "topografia-linea-agua", "estudios-ingenieria-detalle"],
+    },
   },
   {
     id: "mineria",
@@ -88,8 +149,30 @@ export const specialties: {
       "Movimiento de tierras e infraestructura de apoyo",
     ],
     image: "/media/field/mineria-supervision.jpg",
-    alt: "Supervisor de Vicuña con chaleco de la empresa frente a una operación minera",
+    alt: "Supervisor de Vicuna con chaleco de la empresa frente a una operación minera",
     projectType: "mineria",
+    model: { src: "/media/3d/camion.webp", width: 1100, height: 666, alt: "Camión minero en 3D", stance: "ground" },
+    detail: {
+      intro: [
+        "Brindamos soluciones integrales y de alta precisión para el sector minero, abarcando desde estudios topográficos con drones hasta la ejecución y supervisión de obras complejas.",
+        "Desarrollamos proyectos multidisciplinarios a gran escala, como plantas industriales, carreteras, redes de conducción y distribución, movimiento de tierras e infraestructura de apoyo, garantizando siempre el máximo rigor técnico, seguridad y eficiencia operativa.",
+      ],
+      services: [
+        { title: "Topografía con drones", text: "Fotogrametría y levantamientos de alta precisión en zonas de difícil acceso." },
+        { title: "Ejecución y supervisión", text: "Obras complejas con máximo rigor técnico y de seguridad." },
+        { title: "Plantas industriales", text: "Proyectos multidisciplinarios a gran escala." },
+        { title: "Carreteras y accesos", text: "Vías para la operación y la logística minera." },
+        { title: "Redes de conducción y distribución", text: "Sistemas de conducción de agua y fluidos." },
+        { title: "Movimiento de tierras e infraestructura de apoyo", text: "Plataformas, accesos e instalaciones auxiliares." },
+      ],
+      projectIds: ["topografia-linea-agua", "estudios-ingenieria-detalle"],
+      gallery: [
+        { src: "/media/field/mineria-supervision.jpg", alt: "Supervisor de Vicuna frente a una operación minera", caption: "Supervisión en operación minera" },
+        { src: "/media/field/maquinaria-movimiento-tierras.jpg", alt: "Retroexcavadora en movimiento de tierras", caption: "Movimiento de tierras" },
+        { src: "/media/field/topografia-gnss-andes.jpg", alt: "Topógrafos con equipo GNSS en los Andes", caption: "Topografía GNSS en altura" },
+        { src: "/media/field/ingeniero-paisaje-andino.jpg", alt: "Profesional de Vicuna frente a la cordillera", caption: "Equipo en campo" },
+      ],
+    },
   },
 ];
 
@@ -134,7 +217,7 @@ export const about: {
         { t: "público y privado.", hl: true },
       ],
       image: "/media/field/topografia-estacion-total.jpg",
-      alt: "Ingeniero de Vicuña operando una estación total en campo",
+      alt: "Ingeniero de Vicuna operando una estación total en campo",
       tag: "Excelencia técnica",
     },
     {
@@ -149,7 +232,7 @@ export const about: {
         { t: " en grandes proyectos." },
       ],
       image: "/media/field/ingeniero-paisaje-andino.jpg",
-      alt: "Profesional de Vicuña con chaleco de la empresa frente a la cordillera",
+      alt: "Profesional de Vicuna con chaleco de la empresa frente a la cordillera",
       tag: "Equipo en campo",
     },
     {

@@ -3,17 +3,27 @@
 import { ArrowRight } from "lucide-react";
 import { useLenis } from "lenis/react";
 import { motion, useMotionValue, useScroll, useSpring, useTransform } from "motion/react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useRef, type ComponentProps, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { useHexNavigate } from "./RouteHex";
+
+const MotionLink = motion.create(Link);
 
 /* ------------------------------------------------------------------ */
 /* Scroll a una sección (Lenis si está activo, nativo si no)           */
 /* ------------------------------------------------------------------ */
 export function useScrollTo() {
   const lenis = useLenis();
+  const router = useRouter();
   return (id: string) => {
     const el = document.getElementById(id);
-    if (!el) return;
+    // Desde una subpágina (p. ej. /especialidades/mineria) la sección vive en la portada
+    if (!el) {
+      router.push(id === "inicio" ? "/" : `/#${id}`);
+      return;
+    }
     if (lenis) lenis.scrollTo(el, { offset: -88, duration: 1.4 });
     else el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
@@ -31,6 +41,7 @@ type ButtonProps = {
 } & Omit<ComponentProps<"button">, "ref">;
 
 export function Button({ variant = "primary", arrow, href, children, className, onClick, ...rest }: ButtonProps) {
+  const hexNavigate = useHexNavigate();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const sx = useSpring(x, { stiffness: 260, damping: 20 });
@@ -69,6 +80,26 @@ export function Button({ variant = "primary", arrow, href, children, className, 
     </>
   );
 
+  // Rutas internas: navegación del cliente (sin recargar ni repetir el preloader).
+  // Las páginas de rubro entran con el telón hexagonal.
+  if (href?.startsWith("/")) {
+    const hex = href.startsWith("/especialidades/");
+    return (
+      <MotionLink
+        href={href}
+        style={{ x: sx, y: sy }}
+        onPointerMove={onMove}
+        onPointerLeave={onLeave}
+        className={classes}
+        onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+          (onClick as unknown as React.MouseEventHandler<HTMLAnchorElement> | undefined)?.(e);
+          if (hex) hexNavigate(href, e);
+        }}
+      >
+        {content}
+      </MotionLink>
+    );
+  }
   if (href) {
     return (
       <motion.a

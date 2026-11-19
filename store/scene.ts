@@ -23,6 +23,10 @@ type SceneState = {
   /** Tipo de proyecto precargado en el formulario desde "Quiero algo similar". */
   prefill: { type: ProjectType; note?: string; nonce: number } | null;
   setPrefill: (type: ProjectType, note?: string) => void;
+  /** Transición hexagonal hacia la página de un rubro: destino y punto de origen (px de la ventana). */
+  hexNav: { href: string; x: number; y: number } | null;
+  startHexNav: (href: string, x: number, y: number) => void;
+  endHexNav: () => void;
 };
 
 export const useScene = create<SceneState>((set) => ({
@@ -40,4 +44,7 @@ export const useScene = create<SceneState>((set) => ({
   setHover3D: (hover3D) => set({ hover3D }),
   prefill: null,
   setPrefill: (type, note) => set({ prefill: { type, note, nonce: Date.now() } }),
+  hexNav: null,
+  startHexNav: (href, x, y) => set({ hexNav: { href, x, y } }),
+  endHexNav: () => set({ hexNav: null }),
 }));

@@ -4,6 +4,7 @@ import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { Preloader } from "@/components/Preloader";
 import { Providers } from "@/components/providers";
+import { RouteHex } from "@/components/RouteHex";
 import { site } from "@/content/site";
 
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton", display: "swap" });
@@ -11,11 +12,11 @@ const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: "Vicuña Ingenieros · Ingeniería, arquitectura y minería",
+  title: "Vicuna Ingenieros · Ingeniería, arquitectura y minería",
   description:
     "Consultora y ejecutora de ingeniería, arquitectura y minería en Cajamarca y Lima: del levantamiento topográfico y el expediente técnico a la obra terminada.",
   openGraph: {
-    title: "Vicuña Ingenieros · Consultoría & Construcción",
+    title: "Vicuna Ingenieros · Consultoría & Construcción",
     description: "Del levantamiento topográfico a la obra terminada, con un solo equipo en Cajamarca y Lima.",
     locale: "es_PE",
     type: "website",
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Preloader />
           <Navbar />
           {children}
+          <RouteHex />
         </Providers>
       </body>
     </html>

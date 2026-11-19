@@ -6,7 +6,7 @@ import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { Edges, Environment, Lightformer, MeshTransmissionMaterial } from "@react-three/drei";
 import { Suspense, useMemo, useRef } from "react";
 
-/** Símbolo "V" de Vicuña vectorizado del logotipo y extruido en vidrio. */
+/** Símbolo "V" de Vicuna vectorizado del logotipo y extruido en vidrio. */
 function VSymbol() {
   const data = useLoader(SVGLoader, "/media/brand/simbolo-v.svg");
   const group = useRef<THREE.Group>(null);

@@ -4,6 +4,20 @@ import { nav, site } from "@/content/site";
 export function Footer() {
   return (
     <footer className="on-dark relative bg-petroleo-deep text-niebla">
+      {/* Banda de foto de campo que se funde con el pie */}
+      <div className="relative h-[clamp(240px,34vw,480px)] overflow-hidden">
+        <Image
+          src="/media/field/topografia-gnss-andes.jpg"
+          alt="Equipo de Vicuna con equipos GNSS en los Andes"
+          fill
+          sizes="100vw"
+          className="object-cover object-[50%_40%]"
+        />
+        <div aria-hidden className="absolute inset-0 bg-[linear-gradient(180deg,rgb(0_35_48/0.15)_0%,rgb(0_35_48/0.35)_55%,var(--color-petroleo-deep)_100%)]" />
+        <p className="display absolute inset-x-0 bottom-[12%] mx-auto max-w-[1240px] px-6 text-[clamp(36px,6vw,96px)] text-white sm:px-8">
+          Del levantamiento a la obra terminada
+        </p>
+      </div>
       <div className="mx-auto grid max-w-[1240px] gap-12 px-6 py-16 sm:px-8 md:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_1.4fr_1.1fr]">
         <div>
           <Image
@@ -20,7 +34,7 @@ export function Footer() {
           <ul className="mt-4 space-y-2 text-sm">
             {nav.map((n) => (
               <li key={n.id}>
-                <a href={`#${n.id}`} className="transition-colors hover:text-white">
+                <a href={`/#${n.id}`} className="transition-colors hover:text-white">
                   {n.label}
                 </a>
               </li>

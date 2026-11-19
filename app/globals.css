@@ -184,3 +184,25 @@ html[data-preloaded] .preloader {
     transform: scaleX(1);
   }
 }
+
+/* Nubes del hero: deriva lenta de ida y vuelta (decorativa) */
+@keyframes cloud-drift {
+  from {
+    transform: translate3d(-3%, 0, 0);
+  }
+  to {
+    transform: translate3d(3%, 0, 0);
+  }
+}
+.cloud-drift {
+  animation: cloud-drift var(--drift, 38s) ease-in-out infinite alternate;
+}
+
+/* Texto con foto dentro de las letras (logo gigante del hero) */
+.photo-text {
+  background-size: cover;
+  background-position: center;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}

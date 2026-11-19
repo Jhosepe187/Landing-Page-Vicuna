@@ -9,7 +9,7 @@ export type Project = {
   category: ProjectCategory;
   image: string;
   alt: string;
-  /** Describe solo lo visible en el render o la foto. Pendiente de validación por Vicuña. */
+  /** Describe solo lo visible en el render o la foto. Pendiente de validación por Vicuna. */
   description: string;
   projectType: ProjectType;
 };
@@ -156,7 +156,7 @@ export const projects: Project[] = [
     location: "Zona altoandina",
     category: "ingenieria",
     image: "/media/projects/topografia-linea-agua.jpg",
-    alt: "Ingenieros de Vicuña con equipo GNSS en campo altoandino",
+    alt: "Ingenieros de Vicuna con equipo GNSS en campo altoandino",
     description: "Levantamiento topográfico con equipos GNSS para el trazo de una línea de distribución de agua.",
     projectType: "expediente",
   },
@@ -166,7 +166,7 @@ export const projects: Project[] = [
     location: "Trabajo de campo",
     category: "ingenieria",
     image: "/media/projects/estudios-ingenieria-detalle.jpg",
-    alt: "Equipo de Vicuña con EPP realizando mediciones en terreno rocoso",
+    alt: "Equipo de Vicuna con EPP realizando mediciones en terreno rocoso",
     description: "Estudios de campo preliminares que sustentan el desarrollo de la ingeniería de detalle.",
     projectType: "expediente",
   },
@@ -176,7 +176,7 @@ export const projects: Project[] = [
     location: "Cajamarca",
     category: "ingenieria",
     image: "/media/projects/estudios-ie-yanamango.jpg",
-    alt: "Topógrafos de Vicuña midiendo en el patio de una institución educativa",
+    alt: "Topógrafos de Vicuna midiendo en el patio de una institución educativa",
     description: "Levantamiento y estudios preliminares para el proyecto de la institución educativa N°82065 en Yanamango.",
     projectType: "infraestructura",
   },
