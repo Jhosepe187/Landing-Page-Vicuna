@@ -198,9 +198,9 @@ export function Specialties() {
           Tres especialidades, un solo equipo
         </SectionTitle>
         <p className="mt-5 max-w-[62ch] text-lg text-niebla">
-          Somos consultora y ejecutora: brindamos servicios integrales, desde estudios y expedientes técnicos hasta la
-          supervisión y ejecución de proyectos, con calidad, cumplimiento normativo y eficiencia.
-        </p>
+          Lideramos el desarrollo integral de su inversión a través de tres rubros especializados.
+          Donde la precisión técnica en el papel se convierte en calidad, eficiencia y cumplimiento estricto en el campo.
+       </p>
 
         <div className="mt-14 hidden h-[clamp(560px,48vw,660px)] gap-3 [perspective:1600px] md:flex">
           {specialties.map((s) => (
