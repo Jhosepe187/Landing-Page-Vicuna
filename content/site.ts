@@ -128,7 +128,7 @@ export const about: {
       label: "Misión",
       lead: "Nuestra misión:",
       text: [
-        { t: "ofrecer soluciones integrales en arquitectura, ingeniería y construcción con " },
+        { t: "Ofrecer soluciones integrales en arquitectura, ingeniería y construcción con " },
         { t: "excelencia técnica", hl: true },
         { t: ", cumpliendo plazos y normativas para el sector " },
         { t: "público y privado.", hl: true },
@@ -142,7 +142,7 @@ export const about: {
       label: "Visión",
       lead: "Nuestra visión:",
       text: [
-        { t: "ser la empresa consultora " },
+        { t: "Ser la empresa consultora " },
         { t: "líder a nivel nacional", hl: true },
         { t: ", reconocida por su alta confiabilidad y como " },
         { t: "aliada estratégica", hl: true },
@@ -157,7 +157,7 @@ export const about: {
       label: "Propósito",
       lead: "Nuestro propósito:",
       text: [
-        { t: "ejecutar " },
+        { t: "Ejecutar " },
         { t: "obras seguras y funcionales", hl: true },
         { t: " con un equipo multidisciplinario, impulsando el " },
         { t: "desarrollo sostenible", hl: true },
