@@ -1,0 +1,192 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  --color-petroleo: #003647;
+  --color-petroleo-deep: #002330;
+  --color-vicuna: #007296;
+  --color-vicuna-deep: #005f7d;
+  --color-pizarra: #386070;
+  --color-celeste: #78b0c8;
+  --color-niebla: #c9dfe8; /* texto secundario sobre petróleo (celeste aclarado) */
+  --color-humo: #f8f8f8;
+  --color-carbon: #2e3135;
+  --color-linea: #d9e3e7;
+
+  --font-display: var(--font-anton), "Anton", sans-serif;
+  --font-sans: var(--font-montserrat), "Montserrat", system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --radius-card: 12px;
+}
+
+@layer base {
+  html {
+    background: var(--color-petroleo);
+    color: var(--color-carbon);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scrollbar-color: var(--color-pizarra) var(--color-humo);
+    scrollbar-width: thin;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+  }
+  /* Controles: sin retraso de doble toque ni selección por pulsación larga */
+  button,
+  a,
+  [role="button"],
+  [role="radio"] {
+    touch-action: manipulation;
+  }
+  button,
+  [role="button"],
+  [role="radio"] {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  /* iOS hace zoom en inputs menores a 16px */
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-humo);
+    caret-color: var(--color-vicuna);
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-celeste);
+    color: var(--color-petroleo);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-vicuna);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-celeste);
+  }
+  a {
+    text-underline-offset: 4px;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* Titular de marca: Anton siempre en mayúsculas (guía de estilos p.07) */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 0.95;
+}
+
+/* Vidrio oscuro: navbar, selector, formulario y paneles sobre petróleo */
+@utility glass-dark {
+  background: rgb(0 54 71 / 0.38);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgb(120 176 200 / 0.36);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.22),
+    inset 0 -1px 0 rgb(0 30 40 / 0.35),
+    0 20px 44px -22px rgb(0 18 26 / 0.75);
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(155deg, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0) 32%, rgb(120 176 200 / 0) 62%, rgb(168 216 236 / 0.7));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+/* Vidrio claro: pies de tarjeta, tiles de clientes, detalle de proyecto */
+@utility glass-light {
+  background: rgb(248 248 248 / 0.66);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgb(255 255 255 / 0.78);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 18px 40px -22px rgb(0 54 71 / 0.5);
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(155deg, rgb(255 255 255 / 1), rgb(255 255 255 / 0.2) 40%, rgb(120 176 200 / 0.55));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-dark {
+    background: rgb(0 54 71 / 0.94);
+  }
+  .glass-light {
+    background: rgb(248 248 248 / 0.96);
+  }
+}
+
+@utility clip-hex {
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+}
+
+/* Marquee de clientes */
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.marquee-track {
+  animation: marquee var(--marquee-duration, 48s) linear infinite;
+}
+.marquee-track[data-reverse="true"] {
+  animation-direction: reverse;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Preloader: si ya se vio en esta sesión o con movimiento reducido, no se muestra */
+html[data-preloaded] .preloader {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* Progreso del cambio automático de rubro en el hero */
+@keyframes rubro-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}

@@ -1,0 +1,12 @@
+node_modules
+.next
+out
+.env
+.env.local
+*.tsbuildinfo
+next-env.d.ts
+.DS_Store
+
+# Imágenes crudas extraídas del brochure (las usadas están en public/media)
+assets-source/
+.impeccable/hook.cache.json

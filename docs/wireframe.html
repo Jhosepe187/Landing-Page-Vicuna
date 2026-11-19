@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vicuña Ingenieros · Landing v1 — Wireframe, sistema de diseño y arquitectura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --petroleo:#003647; --vicuna:#007296; --pizarra:#386070; --celeste:#78B0C8;
+    --humo:#F8F8F8; --carbon:#2E3135; --blanco:#FFFFFF;
+    --line: color-mix(in oklab, var(--petroleo) 18%, transparent);
+    --wf: color-mix(in oklab, var(--pizarra) 22%, var(--humo));
+    --wf-ink: color-mix(in oklab, var(--pizarra) 55%, var(--humo));
+    --ease-out: cubic-bezier(.16,1,.3,1);
+    --r-card: 12px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:Montserrat,system-ui,sans-serif;color:var(--carbon);background:var(--humo);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  ::selection{background:var(--celeste);color:var(--petroleo)}
+  a{color:var(--vicuna);text-underline-offset:3px}
+  :focus-visible{outline:2px solid var(--vicuna);outline-offset:3px}
+  h1,h2{font-family:Anton,Impact,sans-serif;text-transform:uppercase;font-weight:400;letter-spacing:.01em;line-height:1;margin:0}
+  h3{font-size:20px;line-height:1.3;margin:0 0 8px;font-weight:700}
+  p{margin:0 0 12px;max-width:68ch}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+
+  .cover{position:relative;background:var(--petroleo);color:var(--blanco);overflow:hidden;padding:96px 0 120px}
+  .cover::after{content:"";position:absolute;right:-8%;top:0;bottom:0;width:46%;background:var(--pizarra);clip-path:polygon(28% 0,100% 0,100% 100%,0 100%);opacity:.55}
+  .cover .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.3fr 1fr;gap:48px;align-items:end}
+  .cover h1{font-size:clamp(56px,8vw,112px);line-height:.95}
+  .cover p{color:color-mix(in oklab,var(--celeste) 70%,white);font-size:18px}
+  .cover .logo{background:var(--blanco);padding:10px 16px;border-radius:var(--r-card);display:inline-block;margin-bottom:56px}
+  .cover .logo img{height:36px;display:block}
+  .toc{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+  .toc a{display:flex;justify-content:space-between;gap:16px;padding:10px 18px;border-radius:999px;color:var(--blanco);text-decoration:none;font-weight:600;font-size:14px;background:color-mix(in oklab,var(--vicuna) 70%,transparent);transition:background .32s var(--ease-out),transform .32s var(--ease-out)}
+  .toc a:hover{background:var(--vicuna);transform:translateX(-4px)}
+  .toc a span:last-child{opacity:.75}
+  .contours{position:absolute;inset:0;opacity:.22;pointer-events:none;width:100%;height:100%}
+
+  section.block{padding:112px 0 96px;border-bottom:1px solid var(--line)}
+  section.block > .wrap > h2{font-size:clamp(40px,5vw,64px);color:var(--petroleo);margin-bottom:20px}
+  .lead{font-size:18px;max-width:72ch;margin-bottom:48px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+
+  .concept{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}
+  .concept svg{width:100%;height:auto;border-radius:var(--r-card);background:var(--petroleo);color:var(--blanco)}
+  .steps{display:grid;gap:16px;margin-top:24px}
+  .steps div{display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start}
+  .steps b{font-family:Anton,sans-serif;font-weight:400;font-size:28px;color:var(--vicuna);line-height:1}
+
+  .flow{display:grid;gap:72px}
+  .wf-row{display:grid;grid-template-columns:minmax(0,1fr) 168px 340px;gap:28px;align-items:start}
+  .wf-row header{grid-column:1/-1;display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--petroleo);padding-bottom:10px;flex-wrap:wrap}
+  .wf-row header h3{font-family:Anton,sans-serif;font-weight:400;text-transform:uppercase;font-size:28px;color:var(--petroleo);margin:0;letter-spacing:.01em}
+  .wf-row header .tag{font-size:12px;font-weight:700;background:var(--celeste);color:var(--petroleo);padding:4px 12px;border-radius:999px}
+  .wf-row header code{margin-left:auto;color:var(--pizarra)}
+  .screen{position:relative;aspect-ratio:16/9;border-radius:10px;border:1.5px solid var(--wf-ink);background:var(--blanco);overflow:hidden}
+  .screen.dark{background:#0b3a4a;border-color:#0b3a4a}
+  .screen.tall{aspect-ratio:16/10}
+  .phone{position:relative;aspect-ratio:9/19;border-radius:18px;border:1.5px solid var(--wf-ink);background:var(--blanco);overflow:hidden}
+  .phone.dark{background:#0b3a4a;border-color:#0b3a4a}
+  .b{position:absolute;background:var(--wf);border-radius:4px}
+  .screen.dark .b, .phone.dark .b{background:color-mix(in oklab,var(--celeste) 22%,transparent)}
+  .t{position:absolute;height:6px;border-radius:3px;background:var(--wf-ink)}
+  .screen.dark .t,.phone.dark .t{background:color-mix(in oklab,var(--celeste) 60%,transparent)}
+  .disp{position:absolute;background:var(--petroleo);border-radius:2px}
+  .screen.dark .disp,.phone.dark .disp{background:var(--blanco)}
+  .pill{position:absolute;border-radius:999px;background:var(--vicuna)}
+  .pill.o{background:transparent;border:1.5px solid var(--wf-ink)}
+  .screen.dark .pill.o,.phone.dark .pill.o{border-color:var(--celeste)}
+  .glass{position:absolute;border-radius:999px;background:color-mix(in oklab,var(--celeste) 18%,transparent);border:1px solid color-mix(in oklab,var(--celeste) 55%,transparent);backdrop-filter:blur(6px)}
+  .hex{position:absolute;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}
+  .lbl{position:absolute;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--vicuna);background:var(--blanco);padding:2px 6px;border-radius:4px;border:1px solid var(--celeste);white-space:nowrap}
+  .screen.dark .lbl,.phone.dark .lbl{background:var(--petroleo);color:var(--celeste)}
+  .notes{font-size:14px;line-height:1.5;margin:0}
+  .notes dt{font-weight:700;color:var(--petroleo);margin-top:12px;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+  .notes dt:first-child{margin-top:0}
+  .notes dd{margin:4px 0 0}
+  .card3d{position:absolute;border-radius:6px;background:var(--wf)}
+
+  .swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+  .sw{border-radius:var(--r-card);overflow:hidden;border:1px solid var(--line);background:var(--blanco)}
+  .sw .c{height:120px;display:flex;align-items:flex-end;padding:12px;font-weight:700;font-size:13px}
+  .sw .m{padding:12px;font-size:12px;line-height:1.45}
+  .sw .m b{display:block;font-size:14px;color:var(--petroleo)}
+  .sw .m code{font-size:11px}
+  .ratio{display:flex;height:28px;border-radius:999px;overflow:hidden;margin:24px 0 8px}
+  .ratio span{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden}
+  table{border-collapse:collapse;width:100%;font-size:14px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+  th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--pizarra)}
+  .sample-anton{font-family:Anton,sans-serif;text-transform:uppercase;color:var(--petroleo);line-height:1}
+  .glass-stage{position:relative;border-radius:var(--r-card);overflow:hidden;background:var(--petroleo);min-height:440px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;padding:40px;align-items:center}
+  .glass-stage > img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .glass-stage::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(0,54,71,.85) 0%,rgba(0,54,71,.35) 55%,rgba(0,54,71,0) 100%);z-index:1}
+  .gl{position:relative;z-index:2;padding:24px;min-height:240px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .5s var(--ease-out)}
+  .gl:hover{transform:translateY(-6px)}
+  .gl h3{font-family:Anton,sans-serif;font-weight:400;text-transform:uppercase;font-size:26px;letter-spacing:.01em;margin:0 0 8px}
+  .gl p{font-size:13px;margin:0}
+  .gl code{font-size:11px;display:block;margin-top:14px;opacity:.9;line-height:1.5}
+  .gl-dark{border-radius:var(--r-card);color:var(--blanco);background:rgba(0,54,71,.34);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border:1px solid rgba(120,176,200,.38);box-shadow:inset 0 1px 0 rgba(255,255,255,.28),inset 0 -1px 0 rgba(0,54,71,.4),0 18px 40px -18px rgba(0,20,28,.7)}
+  .gl-light{border-radius:var(--r-card);color:var(--petroleo);background:rgba(248,248,248,.62);backdrop-filter:blur(22px) saturate(160%);-webkit-backdrop-filter:blur(22px) saturate(160%);border:1px solid rgba(255,255,255,.75);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 18px 40px -20px rgba(0,54,71,.55)}
+  .gl-lens{color:var(--blanco);aspect-ratio:1.155/1;min-height:0;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);background:rgba(120,176,200,.16);backdrop-filter:blur(3px) saturate(180%) brightness(1.12);-webkit-backdrop-filter:blur(3px) saturate(180%) brightness(1.12);padding:24px 18%;justify-content:center;text-align:center}
+  .gl-lens::after{content:"";position:absolute;inset:0;clip-path:inherit;background:linear-gradient(160deg,rgba(255,255,255,.45),rgba(255,255,255,0) 28%,rgba(255,255,255,0) 72%,rgba(120,176,200,.5));mix-blend-mode:screen;pointer-events:none}
+  .lightdiag{width:100%;height:auto;border-radius:var(--r-card);background:var(--petroleo);color:var(--blanco)}
+  .tokens{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .tok{background:var(--blanco);border:1px solid var(--line);border-radius:var(--r-card);padding:20px}
+  .tok h3{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--pizarra)}
+  .tok ul{list-style:none;padding:0;margin:0;font-size:13px;display:grid;gap:6px}
+  .tok li{display:flex;justify-content:space-between;gap:8px}
+  .tok li code{color:var(--petroleo);font-size:12px}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 26px;border-radius:999px;font-family:inherit;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;border:0;cursor:pointer;transition:transform .32s var(--ease-out),background .32s var(--ease-out),color .32s var(--ease-out)}
+  .btn-p{background:var(--vicuna);color:var(--blanco);box-shadow:0 10px 24px -12px rgba(0,114,150,.9)}
+  .btn-p:hover{background:#00627f;transform:translateY(-2px)}
+  .btn-p:active{transform:translateY(0) scale(.98)}
+  .btn-s{background:transparent;color:var(--petroleo);box-shadow:inset 0 0 0 1.5px var(--petroleo)}
+  .btn-s:hover{background:var(--petroleo);color:var(--blanco)}
+  .btn .arrow{transition:transform .32s var(--ease-out)}
+  .btn:hover .arrow{transform:translateX(4px)}
+
+  pre.tree{background:#06222c;color:#cfe6ef;border-radius:var(--r-card);padding:28px 32px;overflow:auto;font-size:13px;line-height:1.65;margin:0}
+  pre.tree .d{color:var(--celeste);font-weight:700}
+  pre.tree .c{color:#7f9aa5}
+  .ctree{display:grid;gap:10px;font-size:13px}
+  .node{border:1px solid var(--line);background:var(--blanco);border-radius:10px;padding:10px 14px}
+  .node b{color:var(--petroleo)}
+  .node.client{border-color:var(--vicuna)}
+  .node.three{border-color:var(--celeste);background:color-mix(in oklab,var(--celeste) 12%,white)}
+  .chipc{display:inline-block;border:1px solid var(--vicuna);border-radius:6px;padding:1px 6px;color:var(--vicuna);font-weight:600}
+  .children{margin-left:22px;display:grid;gap:8px;padding-left:14px;border-left:1px dashed var(--wf-ink)}
+  .legend{display:flex;gap:16px;font-size:12px;margin-bottom:12px;flex-wrap:wrap}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:14px;height:14px;border-radius:4px;display:inline-block;border:1px solid var(--line)}
+  .budget li{margin-bottom:8px}
+  .pending{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .pending div{background:var(--blanco);border:1px solid var(--line);border-radius:var(--r-card);padding:20px}
+  footer.doc{padding:48px 0;font-size:13px;color:var(--pizarra)}
+
+  @media (max-width:1100px){
+    .wf-row{grid-template-columns:1fr 140px}
+    .wf-row .notes{grid-column:1/-1}
+    .swatches{grid-template-columns:repeat(3,1fr)}
+    .tokens{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:760px){
+    .wrap{padding:0 20px}
+    .cover .wrap,.concept,.grid2,.glass-stage,.pending{grid-template-columns:1fr}
+    .wf-row{grid-template-columns:1fr}
+    .wf-row .phone{max-width:180px}
+    .swatches{grid-template-columns:repeat(2,1fr)}
+    .tokens{grid-template-columns:1fr}
+    .ratio span{font-size:0}
+    .screen .lbl{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <svg class="contours" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="#78B0C8" stroke-width="1">
+      <path d="M-20 420 C 180 360, 300 470, 520 400 S 860 300, 1220 380"/>
+      <path d="M-20 450 C 200 390, 320 500, 540 430 S 880 330, 1220 410"/>
+      <path d="M-20 480 C 220 420, 340 530, 560 460 S 900 360, 1220 440"/>
+      <path d="M-20 390 C 160 330, 280 440, 500 370 S 840 270, 1220 350"/>
+      <path d="M-20 360 C 140 300, 260 410, 480 340 S 820 240, 1220 320"/>
+      <path d="M-20 330 C 120 270, 240 380, 460 310 S 800 210, 1220 290"/>
+      <path d="M600 200 c 60 -40 160 -40 200 10 s -40 90 -120 80 s -140 -50 -80 -90z"/>
+      <path d="M630 205 c 40 -24 110 -24 136 8 s -26 58 -80 52 s -94 -32 -56 -60z"/>
+    </g>
+  </svg>
+  <div class="wrap">
+    <div>
+      <span class="logo"><img src="../public/media/brand/logo-vicuna-color.png" alt="Vicuña Ingenieros · Consultoría & Construcción"></span>
+      <h1>Landing v1:<br>del terreno<br>a la obra</h1>
+      <p style="margin-top:24px">Wireframe, sistema de diseño Liquid Glass y arquitectura de componentes. Next.js · Tailwind · Framer Motion · React Three Fiber · Lenis.</p>
+    </div>
+    <ol class="toc">
+      <li><a href="#concepto"><span>Concepto del hero</span><span>→</span></a></li>
+      <li><a href="#wireframe"><span>Wireframe y flujo</span><span>→</span></a></li>
+      <li><a href="#sistema"><span>Sistema de diseño</span><span>→</span></a></li>
+      <li><a href="#arquitectura"><span>Arquitectura de código</span><span>→</span></a></li>
+      <li><a href="#pendientes"><span>Decisiones pendientes</span><span>→</span></a></li>
+    </ol>
+  </div>
+</div>
+
+<section class="block" id="concepto">
+  <div class="wrap">
+    <h2>Un lente sobre el terreno</h2>
+    <div class="concept">
+      <div>
+        <p class="lead" style="margin-bottom:16px">Toda obra de Vicuña empieza igual: con un levantamiento topográfico. El hero lo convierte en la interacción central. Un relieve andino dibujado en curvas de nivel ocupa la pantalla; un <strong>lente hexagonal de vidrio</strong> sigue el cursor y, debajo de él, el terreno se convierte en obra.</p>
+        <p>No es un fondo decorativo: el vidrio cumple una función. Refracta el relieve y deja ver lo que Vicuña construye en ese lugar. El selector Ingeniería · Minería · Arquitectura cambia lo que aparece dentro del lente.</p>
+        <div class="steps">
+          <div><b>1</b><span><strong>Arquitectura</strong> (estado inicial, por la audiencia principal): el lente revela volúmenes de vivienda y edificio con ventanas iluminadas al atardecer.</span></div>
+          <div><b>2</b><span><strong>Ingeniería</strong>: aparece el trazo de una carretera, la red de conducción y un pórtico estructural sobre el mismo relieve.</span></div>
+          <div><b>3</b><span><strong>Minería</strong>: el terreno se escalona en bancos de tajo y plataformas, con el recorrido del drone marcado en celeste.</span></div>
+        </div>
+      </div>
+      <svg viewBox="0 0 560 400" role="img" aria-label="Diagrama: lente hexagonal sobre curvas de nivel revelando un edificio">
+        <defs>
+          <clipPath id="lensclip"><polygon points="250,110 350,110 400,197 350,284 250,284 200,197"/></clipPath>
+          <linearGradient id="bevel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".3" stop-color="#fff" stop-opacity="0"/><stop offset=".75" stop-color="#78B0C8" stop-opacity="0"/><stop offset="1" stop-color="#78B0C8" stop-opacity=".7"/></linearGradient>
+        </defs>
+        <g fill="none" stroke="#78B0C8" stroke-opacity=".55" stroke-width="1">
+          <path d="M0 300 C 90 260, 160 320, 260 280 S 430 200, 560 250"/>
+          <path d="M0 320 C 100 280, 170 345, 270 300 S 440 220, 560 272"/>
+          <path d="M0 340 C 110 300, 180 368, 280 322 S 450 242, 560 294"/>
+          <path d="M0 280 C 80 240, 150 298, 250 258 S 420 180, 560 228"/>
+          <path d="M0 260 C 70 220, 140 276, 240 236 S 410 160, 560 206"/>
+          <path d="M0 240 C 60 200, 130 254, 230 214 S 400 140, 560 184"/>
+          <path d="M0 220 C 50 180, 120 232, 220 192 S 390 120, 560 162"/>
+          <path d="M0 200 C 40 160, 110 210, 210 170 S 380 100, 560 140"/>
+          <path d="M0 360 C 120 320, 190 390, 290 344 S 460 264, 560 316"/>
+        </g>
+        <g clip-path="url(#lensclip)">
+          <rect x="190" y="100" width="220" height="200" fill="#0b4658"/>
+          <path d="M190 250 L410 230 L410 300 L190 300Z" fill="#386070"/>
+          <rect x="262" y="150" width="58" height="96" fill="#F8F8F8"/>
+          <rect x="320" y="166" width="34" height="80" fill="#cfdde3"/>
+          <g fill="#ffd79a"><rect x="270" y="160" width="10" height="8"/><rect x="286" y="160" width="10" height="8"/><rect x="302" y="160" width="10" height="8"/><rect x="270" y="178" width="10" height="8"/><rect x="302" y="178" width="10" height="8"/><rect x="286" y="196" width="10" height="8"/><rect x="270" y="214" width="10" height="8"/><rect x="302" y="214" width="10" height="8"/><rect x="326" y="180" width="8" height="8"/><rect x="340" y="198" width="8" height="8"/></g>
+          <rect x="232" y="206" width="30" height="40" fill="#e9eef0"/>
+        </g>
+        <polygon points="250,110 350,110 400,197 350,284 250,284 200,197" fill="url(#bevel)" stroke="#bfe0ee" stroke-width="1.5"/>
+        <polygon points="256,120 344,120 388,197 344,274 256,274 212,197" fill="none" stroke="#fff" stroke-opacity=".35"/>
+        <circle cx="420" cy="96" r="5" fill="#fff"/><path d="M420 96 L392 130" stroke="#fff" stroke-dasharray="3 3"/>
+        <text x="430" y="92" fill="#fff" font-family="Montserrat" font-size="12" font-weight="700">cursor</text>
+        <text x="24" y="40" fill="#fff" font-family="Anton" font-size="22">TERRENO → OBRA</text>
+        <text x="24" y="60" fill="#78B0C8" font-family="Montserrat" font-size="12">curvas de nivel · lente de vidrio · capa "obra" enmascarada</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="wireframe">
+  <div class="wrap">
+    <h2>Wireframe y flujo</h2>
+    <p class="lead">Recorrido: <strong>preloader → hero → proyectos → especialidades → clientes → contacto</strong>. El fondo alterna Azul Petróleo y Blanco Humo según la proporción de la guía (≈45 % claro, ≈25 % petróleo). Una diagonal corta cada cambio de fondo. El botón "Solicitar propuesta" está siempre visible en la navbar.</p>
+
+    <div class="flow">
+
+      <div class="wf-row">
+        <header><h3>Preloader</h3><span class="tag">≤ 2,4 s · solo la 1.ª visita</span><code>components/preloader/</code></header>
+        <div class="screen dark">
+          <svg style="position:absolute;left:44%;top:30%;width:12%" viewBox="0 0 115 100" aria-hidden="true"><polygon points="29,1 86,1 114,50 86,99 29,99 1,50" fill="none" stroke="#78B0C8" stroke-width="3" stroke-dasharray="260 400"/></svg>
+          <div class="disp" style="left:47.6%;top:37%;width:4.8%;height:13%;clip-path:polygon(0 0,30% 0,50% 70%,70% 0,100% 0,50% 100%)"></div>
+          <div class="t" style="left:42%;top:62%;width:16%;height:4px"></div>
+          <span class="lbl" style="left:58%;top:30%">"V" extruida en vidrio, gira 1 vez</span>
+          <span class="lbl" style="left:59%;top:60%">progreso real (useProgress)</span>
+          <span class="lbl" style="left:6%;top:82%">al terminar: la V vuela a la navbar y el hex se abre como lente</span>
+        </div>
+        <div class="phone dark">
+          <div class="disp" style="left:42%;top:42%;width:16%;height:9%;clip-path:polygon(0 0,30% 0,50% 70%,70% 0,100% 0,50% 100%)"></div>
+          <div class="t" style="left:30%;top:56%;width:40%;height:3px"></div>
+        </div>
+        <dl class="notes">
+          <dt>Contenido</dt><dd>Símbolo "V" vectorizado y extruido (excepción aprobada). El wordmark VICUNA aparece plano, sin efectos.</dd>
+          <dt>Motion</dt><dd>Hexágono que se dibuja como barra de progreso, giro de la V en 1,2 s, y transición compartida hacia el logo de la navbar. Usa <code>sessionStorage</code> para no repetirse.</dd>
+          <dt>Accesibilidad</dt><dd>Con <code>prefers-reduced-motion</code> o sin WebGL: logo plano con fundido de 300 ms. Usa <code>aria-busy</code> en el <code>main</code>.</dd>
+        </dl>
+      </div>
+
+      <div class="wf-row">
+        <header><h3>Navbar + Hero</h3><span class="tag">Petróleo · Canvas 3D</span><code>sections/hero/ · layout/Navbar</code></header>
+        <div class="screen dark">
+          <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 160 90" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="#78B0C8" stroke-opacity=".35" stroke-width=".3"><path d="M0 70 C30 60 50 75 80 66 S130 50 160 58"/><path d="M0 75 C30 65 50 80 80 71 S130 55 160 63"/><path d="M0 65 C30 55 50 70 80 61 S130 45 160 53"/><path d="M0 60 C30 50 50 65 80 56 S130 40 160 48"/><path d="M0 55 C30 45 50 60 80 51 S130 35 160 43"/><path d="M0 50 C30 40 50 55 80 46 S130 30 160 38"/><path d="M0 80 C30 70 50 85 80 76 S130 60 160 68"/></g></svg>
+          <div class="glass" style="left:8%;right:8%;top:5%;height:9%"></div>
+          <div class="b" style="left:10%;top:7.5%;width:10%;height:4%;background:#fff"></div>
+          <div class="t" style="left:38%;top:9%;width:5%"></div><div class="t" style="left:45%;top:9%;width:7%"></div><div class="t" style="left:54%;top:9%;width:5%"></div><div class="t" style="left:61%;top:9%;width:6%"></div>
+          <div class="pill" style="right:9.5%;top:7%;width:12%;height:5%"></div>
+          <div class="hex" style="left:52%;top:20%;width:27%;aspect-ratio:1.155/1;background:linear-gradient(160deg,rgba(255,255,255,.35),rgba(120,176,200,.18))"></div>
+          <div class="b" style="left:61%;top:33%;width:6%;height:20%;background:#F8F8F8"></div><div class="b" style="left:67%;top:38%;width:4%;height:15%;background:#cfdde3"></div>
+          <div class="disp" style="left:6%;top:50%;width:40%;height:9%"></div>
+          <div class="disp" style="left:6%;top:61%;width:34%;height:9%"></div>
+          <div class="t" style="left:6%;top:75%;width:30%"></div>
+          <div class="pill" style="left:6%;top:82%;width:15%;height:7%"></div>
+          <div class="pill o" style="left:23%;top:82%;width:12%;height:7%"></div>
+          <div class="glass" style="right:6%;top:82%;width:30%;height:7%"></div>
+          <span class="lbl" style="left:9%;top:16%">navbar de vidrio flotante</span>
+          <span class="lbl" style="left:72%;top:18%">lente hex. sigue el cursor</span>
+          <span class="lbl" style="left:6%;top:43%">Anton 112px</span>
+          <span class="lbl" style="right:6%;top:74%">Ingeniería · Minería · Arquitectura</span>
+        </div>
+        <div class="phone dark">
+          <div class="glass" style="left:6%;right:6%;top:3%;height:5%"></div>
+          <div class="b" style="left:10%;top:4.3%;width:26%;height:2.4%;background:#fff"></div>
+          <div class="b" style="right:10%;top:4.3%;width:8%;height:2.4%"></div>
+          <div class="hex" style="left:18%;top:14%;width:64%;aspect-ratio:1.155/1;background:linear-gradient(160deg,rgba(255,255,255,.35),rgba(120,176,200,.18))"></div>
+          <div class="disp" style="left:8%;top:48%;width:80%;height:5%"></div>
+          <div class="disp" style="left:8%;top:54.5%;width:70%;height:5%"></div>
+          <div class="t" style="left:8%;top:63%;width:76%;height:3px"></div>
+          <div class="glass" style="left:8%;right:8%;top:70%;height:5%"></div>
+          <div class="pill" style="left:8%;right:8%;top:79%;height:5.5%"></div>
+          <div class="pill o" style="left:8%;right:8%;top:86.5%;height:5.5%"></div>
+        </div>
+        <dl class="notes">
+          <dt>Copy</dt><dd><strong>CONSTRUYENDO SUEÑOS, TRANSFORMANDO REALIDADES</strong><br>"Ingeniería, arquitectura y minería: del levantamiento topográfico a la obra terminada, con un solo equipo en Cajamarca y Lima."</dd>
+          <dt>Acciones</dt><dd>SOLICITAR PROPUESTA (lleva a #contacto) · VER PROYECTOS (botón secundario).</dd>
+          <dt>Interacción</dt><dd>Lente con amortiguación (<code>damp</code>, λ≈4). El selector fija el contenido del lente con un morph de 0,9 s. En móvil, el lente orbita solo y el selector pasa a control segmentado.</dd>
+          <dt>Navbar</dt><dd>Píldora de vidrio con top de 16 px. Se compacta al bajar y reaparece al subir. Un hexágono indica la sección activa (<code>layoutId</code>). En móvil: hoja de vidrio a pantalla completa.</dd>
+        </dl>
+      </div>
+
+      <div class="wf-row">
+        <header><h3>Proyectos destacados</h3><span class="tag">Humo · carrusel 3D</span><code>sections/projects/</code></header>
+        <div class="screen">
+          <div class="disp" style="left:6%;top:9%;width:36%;height:8%"></div>
+          <div class="t" style="left:6%;top:21%;width:30%"></div>
+          <div class="pill o" style="left:58%;top:10%;width:7%;height:5%"></div><div class="pill" style="left:66%;top:10%;width:8%;height:5%"></div><div class="pill o" style="left:75%;top:10%;width:8%;height:5%"></div><div class="pill o" style="left:84%;top:10%;width:10%;height:5%"></div>
+          <div style="position:absolute;inset:30% 0 14% 0;perspective:600px">
+            <div class="card3d" style="left:-4%;top:12%;width:22%;height:76%;transform:rotateY(28deg) scale(.82);opacity:.6"></div>
+            <div class="card3d" style="left:14%;top:6%;width:24%;height:88%;transform:rotateY(18deg) scale(.9);opacity:.85"></div>
+            <div class="card3d" style="left:37%;top:0;width:28%;height:100%;background:var(--pizarra)"></div>
+            <div class="card3d" style="left:63%;top:6%;width:24%;height:88%;transform:rotateY(-18deg) scale(.9);opacity:.85"></div>
+            <div class="card3d" style="left:83%;top:12%;width:22%;height:76%;transform:rotateY(-28deg) scale(.82);opacity:.6"></div>
+          </div>
+          <div class="glass" style="left:39%;top:72%;width:24%;height:10%;border-radius:8px;background:rgba(248,248,248,.6);border-color:#fff"></div>
+          <div class="hex" style="left:46%;top:88%;width:2%;aspect-ratio:1.155/1;background:var(--vicuna)"></div><div class="hex" style="left:49%;top:88%;width:2%;aspect-ratio:1.155/1;background:var(--wf-ink)"></div><div class="hex" style="left:52%;top:88%;width:2%;aspect-ratio:1.155/1;background:var(--wf-ink)"></div>
+          <span class="lbl" style="left:40%;top:26%">tarjeta central plana, laterales rotateY ±18°</span>
+          <span class="lbl" style="left:58%;top:20%">filtros</span>
+          <span class="lbl" style="left:66%;top:62%">cursor hex "Arrastra"</span>
+        </div>
+        <div class="phone">
+          <div class="disp" style="left:8%;top:6%;width:70%;height:4%"></div>
+          <div class="pill o" style="left:8%;top:13%;width:22%;height:3%"></div><div class="pill" style="left:32%;top:13%;width:24%;height:3%"></div><div class="pill o" style="left:58%;top:13%;width:30%;height:3%"></div>
+          <div class="card3d" style="left:10%;top:20%;width:80%;height:56%;background:var(--pizarra)"></div>
+          <div class="card3d" style="left:93%;top:23%;width:40%;height:50%"></div>
+          <div class="glass" style="left:14%;top:64%;width:72%;height:9%;border-radius:6px;background:rgba(248,248,248,.6);border-color:#fff"></div>
+          <div class="t" style="left:36%;top:82%;width:28%;height:3px"></div>
+        </div>
+        <dl class="notes">
+          <dt>Título</dt><dd><strong>OBRAS QUE YA ESTÁN EN PIE</strong>: 15 proyectos reales del brochure. El orden empieza por vivienda y edificios.</dd>
+          <dt>Filtros</dt><dd>Todos · Vivienda · Edificios · Comercial · Ingeniería y topografía.</dd>
+          <dt>Interacción</dt><dd>Arrastre con inercia, flechas, teclado ←/→ y rueda horizontal. Al hacer clic, la tarjeta se expande con un morph de <code>layoutId</code> hacia un panel con imagen grande, nombre, ubicación, especialidad, descripción breve y el botón "Quiero algo similar", que precarga el tipo de proyecto en el formulario.</dd>
+          <dt>Descripciones</dt><dd>Solo describen lo visible en el render (niveles, uso). <em>Vicuña debe validarlas.</em></dd>
+        </dl>
+      </div>
+
+      <div class="wf-row">
+        <header><h3>Especialidades</h3><span class="tag">Petróleo · tríptico expandible</span><code>sections/specialties/</code></header>
+        <div class="screen dark">
+          <div class="disp" style="left:6%;top:8%;width:30%;height:8%"></div>
+          <div class="b" style="left:6%;top:24%;width:52%;height:68%;background:linear-gradient(115deg,rgba(0,54,71,.9),rgba(0,54,71,.2)),#386070"></div>
+          <div class="hex" style="left:33%;top:30%;width:21%;aspect-ratio:1.155/1;background:rgba(248,248,248,.35)"></div>
+          <div class="disp" style="left:9%;top:58%;width:26%;height:7%"></div>
+          <div class="glass" style="left:9%;top:70%;width:34%;height:17%;border-radius:8px"></div>
+          <div class="b" style="left:60%;top:24%;width:16%;height:68%"></div>
+          <div class="b" style="left:78%;top:24%;width:16%;height:68%"></div>
+          <div class="disp" style="left:66.5%;top:36%;width:3%;height:44%"></div>
+          <div class="disp" style="left:84.5%;top:36%;width:3%;height:44%"></div>
+          <span class="lbl" style="left:9%;top:27%">panel activo ≈56 %: foto de campo + velo diagonal</span>
+          <span class="lbl" style="left:60%;top:16%">título Anton vertical</span>
+          <span class="lbl" style="left:44%;top:78%">alcance en vidrio</span>
+        </div>
+        <div class="phone dark">
+          <div class="disp" style="left:8%;top:5%;width:60%;height:4%"></div>
+          <div class="b" style="left:8%;top:13%;width:84%;height:44%;background:linear-gradient(160deg,rgba(0,54,71,.9),rgba(0,54,71,.2)),#386070"></div>
+          <div class="glass" style="left:12%;top:40%;width:76%;height:14%;border-radius:6px"></div>
+          <div class="b" style="left:8%;top:60%;width:84%;height:9%"></div>
+          <div class="b" style="left:8%;top:71%;width:84%;height:9%"></div>
+        </div>
+        <dl class="notes">
+          <dt>Orden</dt><dd>Arquitectura y Diseño → Ingeniería y Construcción → Minería. No son tres tarjetas iguales: el panel activo crece y los otros se comprimen a una franja con el título vertical.</dd>
+          <dt>Contenido</dt><dd>Texto de servicios tal como aparece en el brochure, más una lista de alcance (p. ej. Minería: topografía con drones, plantas industriales, carreteras, redes de conducción, movimiento de tierras).</dd>
+          <dt>Interacción</dt><dd>Se activa con hover o foco (y con tap en móvil). La foto se revela con un clip hexagonal que crece desde el centro. Hay un parallax leve de la foto en el eje Y con el scroll. En móvil funciona como acordeón.</dd>
+        </dl>
+      </div>
+
+      <div class="wf-row">
+        <header><h3>Clientes y alianzas</h3><span class="tag">Humo · marquee</span><code>sections/clients/</code></header>
+        <div class="screen">
+          <div class="disp" style="left:32%;top:12%;width:36%;height:8%"></div>
+          <div class="t" style="left:30%;top:25%;width:40%"></div>
+          <div style="position:absolute;left:0;right:0;top:38%;height:20%;display:flex;gap:2%;padding-left:2%">
+            <div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px;background:#fff;outline:1.5px solid var(--vicuna)"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div>
+          </div>
+          <div style="position:absolute;left:-8%;right:0;top:63%;height:20%;display:flex;gap:2%">
+            <div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div><div class="b" style="position:relative;flex:0 0 14%;border-radius:8px"></div>
+          </div>
+          <span class="lbl" style="left:2%;top:31%">fila 1 →</span><span class="lbl" style="right:2%;top:86%">← fila 2</span>
+          <span class="lbl" style="left:34%;top:59%">hover: color real + pausa</span>
+        </div>
+        <div class="phone">
+          <div class="disp" style="left:12%;top:10%;width:76%;height:4%"></div>
+          <div class="b" style="left:-10%;top:24%;width:40%;height:9%"></div><div class="b" style="left:34%;top:24%;width:40%;height:9%"></div><div class="b" style="left:78%;top:24%;width:40%;height:9%"></div>
+          <div class="b" style="left:-28%;top:36%;width:40%;height:9%"></div><div class="b" style="left:16%;top:36%;width:40%;height:9%"></div><div class="b" style="left:60%;top:36%;width:40%;height:9%"></div>
+        </div>
+        <dl class="notes">
+          <dt>Título</dt><dd><strong>CONFÍAN EN NUESTRA PRECISIÓN</strong>. "Aliados estratégicos en el desarrollo del país." (texto del brochure).</dd>
+          <dt>Logos</dt><dd>Michiquillay, Generando Capacidades, GORE Cajamarca, EACE, Regianz, Cúspide Copper, Volcan, Arga Group y Fidamar, sobre tiles de vidrio claro.</dd>
+          <dt>Interacción</dt><dd>Dos filas en sentidos opuestos. En reposo, los logos están en monocromo Pizarra (CSS <code>mask</code> + color) y al hacer hover muestran su color real. El marquee se pausa con hover o foco. La velocidad responde un poco a la del scroll de Lenis. Con <code>prefers-reduced-motion</code> pasa a una grilla estática de 3×3.</dd>
+        </dl>
+      </div>
+
+      <div class="wf-row">
+        <header><h3>Contacto + Footer</h3><span class="tag">Petróleo · conversión</span><code>sections/contact/ · layout/Footer</code></header>
+        <div class="screen dark tall">
+          <svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 160 100" preserveAspectRatio="none" aria-hidden="true"><g fill="none" stroke="#78B0C8" stroke-opacity=".22" stroke-width=".3"><path d="M0 20 C30 10 50 25 80 16 S130 0 160 8"/><path d="M0 26 C30 16 50 31 80 22 S130 6 160 14"/><path d="M0 32 C30 22 50 37 80 28 S130 12 160 20"/></g></svg>
+          <div class="disp" style="left:6%;top:10%;width:34%;height:8%"></div>
+          <div class="disp" style="left:6%;top:20%;width:26%;height:8%"></div>
+          <div class="t" style="left:6%;top:34%;width:30%"></div>
+          <div class="b" style="left:6%;top:42%;width:30%;height:7%;border-radius:999px;background:var(--vicuna)"></div>
+          <div class="t" style="left:6%;top:59%;width:22%"></div><div class="t" style="left:6%;top:64%;width:26%"></div><div class="t" style="left:6%;top:71%;width:28%"></div><div class="t" style="left:6%;top:76%;width:24%"></div>
+          <div class="glass" style="left:48%;top:8%;width:46%;height:74%;border-radius:12px"></div>
+          <div class="b" style="left:51%;top:13%;width:19%;height:6%"></div><div class="b" style="left:72%;top:13%;width:19%;height:6%"></div>
+          <div class="b" style="left:51%;top:22%;width:19%;height:6%"></div><div class="b" style="left:72%;top:22%;width:19%;height:6%"></div>
+          <div class="pill o" style="left:51%;top:32%;width:9%;height:4.5%"></div><div class="pill" style="left:61%;top:32%;width:11%;height:4.5%"></div><div class="pill o" style="left:73%;top:32%;width:9%;height:4.5%"></div><div class="pill o" style="left:83%;top:32%;width:8%;height:4.5%"></div>
+          <div class="pill o" style="left:51%;top:38.5%;width:12%;height:4.5%"></div><div class="pill o" style="left:64%;top:38.5%;width:14%;height:4.5%"></div>
+          <div class="b" style="left:51%;top:46%;width:40%;height:6%"></div>
+          <div class="b" style="left:51%;top:55%;width:40%;height:13%"></div>
+          <div class="pill" style="left:51%;top:72%;width:40%;height:6%"></div>
+          <div class="b" style="left:0;right:0;top:88%;height:12%;background:#062a37;border-radius:0"></div>
+          <span class="lbl" style="left:6%;top:51%">WhatsApp · tel · correos · 2 oficinas</span>
+          <span class="lbl" style="left:72%;top:3%">formulario de vidrio</span>
+          <span class="lbl" style="left:28%;top:34%">tipo de proyecto (chips)</span>
+        </div>
+        <div class="phone dark">
+          <div class="disp" style="left:8%;top:4%;width:70%;height:3.5%"></div><div class="disp" style="left:8%;top:8.5%;width:56%;height:3.5%"></div>
+          <div class="glass" style="left:6%;top:16%;width:88%;height:60%;border-radius:10px"></div>
+          <div class="b" style="left:11%;top:20%;width:78%;height:4%"></div><div class="b" style="left:11%;top:26%;width:78%;height:4%"></div><div class="b" style="left:11%;top:32%;width:78%;height:4%"></div>
+          <div class="pill o" style="left:11%;top:39%;width:24%;height:3%"></div><div class="pill" style="left:37%;top:39%;width:26%;height:3%"></div><div class="pill o" style="left:65%;top:39%;width:24%;height:3%"></div>
+          <div class="b" style="left:11%;top:46%;width:78%;height:12%"></div>
+          <div class="pill" style="left:11%;top:66%;width:78%;height:4.5%"></div>
+          <div class="b" style="left:8%;top:80%;width:84%;height:5%;border-radius:999px;background:var(--vicuna)"></div>
+          <div class="b" style="left:0;right:0;top:90%;height:10%;background:#062a37;border-radius:0"></div>
+        </div>
+        <dl class="notes">
+          <dt>Título</dt><dd><strong>HABLEMOS DE TU PROYECTO</strong></dd>
+          <dt>Campos</dt><dd>Nombre* · Empresa · Email* · Teléfono* · Tipo de proyecto* (Vivienda, Edificio multifamiliar, Comercial / hotel, Minería, Infraestructura / obra pública, Expediente técnico / topografía) · Ciudad del proyecto · Mensaje* · Consentimiento de datos (Ley 29733)*.</dd>
+          <dt>Validación</dt><dd>Esquema zod compartido entre cliente y servidor. El error aparece al salir del campo, no mientras se escribe. Se cubren los estados enviando / éxito (un hexágono se dibuja como check) / error con reintento. Lleva honeypot y rate-limit.</dd>
+          <dt>Footer</dt><dd>Logo plano, lema, enlaces, redes, ambas direcciones y ©.</dd>
+        </dl>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="block" id="sistema">
+  <div class="wrap">
+    <h2>Sistema de diseño</h2>
+    <p class="lead">La guía de estilos Vicuña v1.0 manda. El Liquid Glass es el material en el que se expresa la marca: vidrio teñido de petróleo y celeste, con bisel de luz celeste. La escena de uso (un propietario que revisa propuestas de día, en oficina o en el celular) pide secciones de lectura claras; el petróleo se reserva para los momentos de inmersión: hero, especialidades y cierre.</p>
+
+    <h3>Paleta y roles</h3>
+    <div class="swatches">
+      <div class="sw"><div class="c" style="background:#003647;color:#fff">Petróleo</div><div class="m"><b>#003647</b><code>--color-petroleo</code><br>Hero, especialidades, contacto, titulares sobre claro</div></div>
+      <div class="sw"><div class="c" style="background:#007296;color:#fff">Vicuña</div><div class="m"><b>#007296</b><code>--color-vicuna</code><br>CTA, enlaces, foco, estado activo</div></div>
+      <div class="sw"><div class="c" style="background:#386070;color:#fff">Pizarra</div><div class="m"><b>#386070</b><code>--color-pizarra</code><br>Paneles, hexágonos, logos en reposo</div></div>
+      <div class="sw"><div class="c" style="background:#78B0C8;color:#003647">Celeste</div><div class="m"><b>#78B0C8</b><code>--color-celeste</code><br>Curvas de nivel, bisel del vidrio, chips (texto siempre petróleo)</div></div>
+      <div class="sw"><div class="c" style="background:#F8F8F8;color:#003647;border-bottom:1px solid var(--line)">Humo</div><div class="m"><b>#F8F8F8</b><code>--color-humo</code><br>Fondo de proyectos y clientes</div></div>
+      <div class="sw"><div class="c" style="background:#2E3135;color:#fff">Carbón</div><div class="m"><b>#2E3135</b><code>--color-carbon</code><br>Texto corrido sobre claro</div></div>
+    </div>
+    <div class="ratio" role="img" aria-label="Proporción de uso: Humo 45 %, Petróleo 25 %, Vicuña 12 %, Pizarra 10 %, Celeste 8 %">
+      <span style="flex:45;background:#fff;color:#003647;box-shadow:inset 0 0 0 1px var(--line);border-radius:999px 0 0 999px">Humo/Blanco 45 %</span>
+      <span style="flex:25;background:#003647;color:#fff">Petróleo 25 %</span>
+      <span style="flex:12;background:#007296;color:#fff">Vicuña 12 %</span>
+      <span style="flex:10;background:#386070;color:#fff">Pizarra 10 %</span>
+      <span style="flex:8;background:#78B0C8;color:#003647">Celeste 8 %</span>
+    </div>
+    <p style="font-size:13px">Contraste verificado en la guía: blanco/petróleo 12,97:1 · blanco/vicuña 5,46:1 · petróleo/celeste 5,46:1. Prohibido: blanco sobre celeste (2,37:1). En los fondos petróleo, el texto secundario es celeste aclarado (<code>color-mix(celeste 35%, white)</code>), nunca gris.</p>
+
+    <h3 style="margin-top:56px">Tipografía (web)</h3>
+    <table>
+      <thead><tr><th>Nivel</th><th>Muestra</th><th>Fuente</th><th>Tamaño</th><th>Interlínea</th></tr></thead>
+      <tbody>
+        <tr><td>Display hero</td><td><span class="sample-anton" style="font-size:44px">Construyendo sueños</span></td><td>Anton · MAYÚS</td><td><code>clamp(56px, 7.5vw, 112px)</code></td><td>0.95</td></tr>
+        <tr><td>H1 sección</td><td><span class="sample-anton" style="font-size:32px">Obras que ya están en pie</span></td><td>Anton · MAYÚS</td><td><code>clamp(40px, 5vw, 64px)</code></td><td>1.0</td></tr>
+        <tr><td>H2</td><td><span class="sample-anton" style="font-size:24px">Arquitectura y diseño</span></td><td>Anton · MAYÚS</td><td><code>28–36px</code></td><td>1.1</td></tr>
+        <tr><td>H3</td><td><span style="font-weight:700;font-size:20px;color:#003647">Vivienda unifamiliar Chiclayo</span></td><td>Montserrat 700</td><td><code>20px</code></td><td>1.3</td></tr>
+        <tr><td>Cuerpo</td><td><span style="font-size:16px">Desarrollamos y supervisamos proyectos integrales…</span></td><td>Montserrat 400</td><td><code>16–18px</code> · máx. 68ch</td><td>1.55</td></tr>
+        <tr><td>Botón / chip</td><td><span style="font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#007296">Solicitar propuesta</span></td><td>Montserrat 700</td><td><code>13px · +0.08em</code></td><td>1</td></tr>
+        <tr><td>Pie de foto</td><td><span style="font-size:12px">Edificio residencial Pimentel · Chiclayo</span></td><td>Montserrat 400</td><td><code>12–13px</code></td><td>1.4</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;margin-top:12px">Se usan <code>next/font/google</code> autoalojadas (Anton 400; Montserrat 400/600/700, subset latin) y como máximo dos pesos por pantalla. No se usan eyebrows ni kickers sobre los titulares: el titular en Anton se sostiene solo.</p>
+
+    <h3 style="margin-top:56px">Material Liquid Glass, en 3 niveles</h3>
+    <div class="glass-stage">
+      <img src="../public/media/field/topografia-gnss-andes.jpg" alt="Equipo de Vicuña con GNSS en los Andes">
+      <div class="gl gl-lens">
+        <div><h3>Lente 3D</h3><p>Solo en el hero. Es geometría real con refracción.</p>
+        <code>MeshTransmissionMaterial<br>ior 1.22 · thickness 0.6<br>chromaticAberration 0.035<br>roughness 0.06 · anisotropy 0.2<br>bevel 0.04 · samples 6</code></div>
+      </div>
+      <div class="gl gl-dark">
+        <div><h3>Vidrio oscuro</h3><p>Navbar, selector de especialidad, alcance de servicios y formulario sobre petróleo.</p></div>
+        <code>bg rgba(0,54,71,.34)<br>backdrop: blur(18px) saturate(140%)<br>border 1px rgba(120,176,200,.38)<br>inset 0 1px 0 rgba(255,255,255,.28)<br>sombra 0 18px 40px -18px</code>
+      </div>
+      <div class="gl gl-light">
+        <div><h3>Vidrio claro</h3><p>Pie de tarjeta del carrusel, tiles de clientes y panel de detalle de proyecto.</p></div>
+        <code>bg rgba(248,248,248,.62)<br>backdrop: blur(22px) saturate(160%)<br>border 1px rgba(255,255,255,.75)<br>inset 0 1px 0 rgba(255,255,255,.9)</code>
+      </div>
+    </div>
+    <p style="font-size:13px;margin-top:12px">Regla: el vidrio siempre está sobre algo que vale la pena refractar (relieve, foto, render). Nunca se usa vidrio sobre un fondo plano ni se apilan vidrios. Sin <code>backdrop-filter</code> (Firefox antiguo o modo de bajo consumo) se usa un fondo opaco de petróleo al 92 %.</p>
+
+    <h3 style="margin-top:56px">Iluminación 3D</h3>
+    <div class="grid2" style="align-items:center">
+      <svg class="lightdiag" viewBox="0 0 520 300" role="img" aria-label="Esquema de iluminación: key cálida, rim celeste, fill petróleo">
+        <rect width="520" height="300" fill="#003647"/>
+        <g fill="none" stroke="#78B0C8" stroke-opacity=".35"><path d="M0 230 C120 200 200 250 300 215 S440 170 520 190"/><path d="M0 250 C120 220 200 270 300 235 S440 190 520 210"/><path d="M0 210 C120 180 200 230 300 195 S440 150 520 170"/></g>
+        <polygon points="230,120 290,120 320,172 290,224 230,224 200,172" fill="rgba(120,176,200,.18)" stroke="#bfe0ee"/>
+        <circle cx="70" cy="70" r="22" fill="#ffcf8a"/><path d="M92 82 L210 140" stroke="#ffcf8a" stroke-dasharray="4 4"/>
+        <text x="40" y="40" fill="#ffcf8a" font-family="Montserrat" font-size="12" font-weight="700">KEY · sol bajo de atardecer</text>
+        <rect x="440" y="40" width="50" height="110" rx="4" fill="#78B0C8" opacity=".85"/><path d="M440 100 L322 150" stroke="#78B0C8" stroke-dasharray="4 4"/>
+        <text x="300" y="30" fill="#78B0C8" font-family="Montserrat" font-size="12" font-weight="700">RIM · Lightformer celeste</text>
+        <text x="24" y="285" fill="#cfe6ef" font-family="Montserrat" font-size="12">FILL · ambiente petróleo + niebla #003647 (near 6, far 18)</text>
+      </svg>
+      <div>
+        <p><strong>Key:</strong> luz direccional cálida y rasante (#FFCF8A, 2.2), como el "atardecer" que pide la guía para la fotografía. Hace que las ventanas de la arquitectura brillen y alarga las sombras del relieve.</p>
+        <p><strong>Rim:</strong> un <code>Lightformer</code> rectangular celeste a contraluz dibuja el bisel del lente y los cantos del símbolo V. Es la única fuente de luz "de marca".</p>
+        <p><strong>Fill y atmósfera:</strong> <code>Environment</code> con lightformers propios (sin HDRI externo, ≈0 KB) y niebla petróleo para que el relieve se funda con el fondo. Se usa tonemapping ACES, sin bloom: el brillo sale de los materiales, no de un post-proceso.</p>
+        <p><strong>Relieve:</strong> un plano desplazado por ruido (ridged FBM), con un shader de curvas de nivel celeste de 1 px y cada quinta curva más gruesa (curva maestra), como en un plano topográfico real.</p>
+      </div>
+    </div>
+
+    <h3 style="margin-top:56px">Formas, espacio y movimiento</h3>
+    <div class="tokens">
+      <div class="tok"><h3>Forma</h3><ul>
+        <li>Hexágono <code>vértices L/R</code></li><li>Esquinas hex <code>0</code></li><li>Tarjetas <code>12px</code></li><li>Botón / chip <code>999px</code></li><li>Diagonal <code>≈ 14°</code></li></ul></div>
+      <div class="tok"><h3>Espacio (base 8)</h3><ul>
+        <li>xs / sm <code>8 / 16</code></li><li>md / lg <code>24 / 40</code></li><li>xl <code>64</code></li><li>Sección <code>clamp(96,12vw,160)</code></li><li>Contenedor <code>1240 + 32</code></li></ul></div>
+      <div class="tok"><h3>Movimiento</h3><ul>
+        <li>Ease <code>(.16,1,.3,1)</code></li><li>Micro <code>180ms</code></li><li>UI <code>320ms</code></li><li>Reveal <code>700ms</code></li><li>Escena 3D <code>900–1200ms</code></li></ul></div>
+      <div class="tok"><h3>Scroll</h3><ul>
+        <li>Lenis <code>lerp 0.1</code></li><li>wheelMultiplier <code>0.9</code></li><li>Touch <code>nativo</code></li><li>Anclas <code>offset -96</code></li><li>Reduced motion <code>off</code></li></ul></div>
+    </div>
+
+    <h3 style="margin-top:56px">Microinteracciones</h3>
+    <div class="grid2" style="align-items:center">
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <button class="btn btn-p" type="button">Solicitar propuesta <span class="arrow" aria-hidden="true">→</span></button>
+        <button class="btn btn-s" type="button">Ver proyectos</button>
+      </div>
+      <ul style="font-size:14px;margin:0;padding-left:18px">
+        <li><strong>Botones:</strong> se elevan 2 px, la flecha avanza 4 px, al presionar escalan a 0.98 y tienen un magnetismo leve (≤ 6 px) solo con puntero fino.</li>
+        <li><strong>Imágenes:</strong> zoom de 1.04 con <code>scale</code> interno y un brillo de bisel que recorre el borde en 600 ms.</li>
+        <li><strong>Tarjetas del carrusel:</strong> tilt de ±4° siguiendo el puntero; sobre ellas el cursor se convierte en el hexágono del hero.</li>
+        <li><strong>Campos:</strong> el borde pasa a celeste y luego a vicuña al enfocar. Con error vibran 2 px una sola vez y muestran un mensaje con la causa y cómo corregirla.</li>
+        <li><strong>Navegador:</strong> <code>::selection</code> celeste/petróleo, caret vicuña, scrollbar fina en pizarra y anillo de foco vicuña con offset de 3 px.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="arquitectura">
+  <div class="wrap">
+    <h2>Arquitectura de código</h2>
+    <p class="lead">Next.js App Router con Server Components por defecto. Solo se hidratan las islas interactivas. Hay un único <code>&lt;Canvas&gt;</code> de R3F (hero y preloader comparten contexto WebGL), cargado con <code>dynamic(..., {ssr:false})</code>. El contenido está tipado en <code>content/</code> como fuente única, listo para migrar a un CMS sin tocar componentes.</p>
+
+    <div class="grid2" style="grid-template-columns:1.15fr 1fr;align-items:start">
+<pre class="tree"><span class="d">vicuna-landing/</span>
+├─ <span class="d">app/</span>
+│  ├─ layout.tsx          <span class="c">fuentes, metadata, &lt;Providers&gt;</span>
+│  ├─ page.tsx            <span class="c">compone las secciones (RSC)</span>
+│  ├─ globals.css         <span class="c">@theme tokens, ::selection, foco</span>
+│  ├─ opengraph-image.tsx
+│  └─ <span class="d">api/contact/</span>route.ts  <span class="c">zod + honeypot + rate-limit + Resend</span>
+├─ <span class="d">components/</span>
+│  ├─ <span class="d">providers/</span>    SmoothScroll · MotionProvider
+│  ├─ <span class="d">layout/</span>       Navbar · NavIndicator · MobileMenu · Footer
+│  ├─ <span class="d">preloader/</span>    Preloader · PreloaderV3D
+│  ├─ <span class="d">sections/</span>
+│  │  ├─ <span class="d">hero/</span>         Hero · HeroCopy · RubroSwitch · HeroFallback
+│  │  ├─ <span class="d">projects/</span>     Projects · ProjectFilters · ProjectCarousel
+│  │  │                ProjectCard · ProjectDetail
+│  │  ├─ <span class="d">specialties/</span>  Specialties · SpecialtyPanel
+│  │  ├─ <span class="d">clients/</span>      Clients · LogoMarquee · LogoTile
+│  │  └─ <span class="d">contact/</span>      Contact · ContactForm · ProjectTypeChips
+│  │                   ContactChannels · FormStatus
+│  ├─ <span class="d">three/</span>
+│  │  ├─ SceneCanvas.tsx      <span class="c">Canvas único, dpr adaptativo</span>
+│  │  ├─ Terrain.tsx          <span class="c">relieve + shader de curvas</span>
+│  │  ├─ HexLens.tsx          <span class="c">transmisión + máscara stencil</span>
+│  │  ├─ <span class="d">worlds/</span>  Architecture · Engineering · Mining
+│  │  ├─ VSymbol.tsx          <span class="c">ExtrudeGeometry del símbolo</span>
+│  │  ├─ Lighting.tsx
+│  │  └─ <span class="d">shaders/</span> contours.vert/.frag
+│  └─ <span class="d">ui/</span>   Button · GlassPanel · Hexagon · DiagonalEdge
+│        HexCursor · Field · Chip · Checkbox · Reveal
+├─ <span class="d">content/</span>   projects · specialties · clients · site
+├─ <span class="d">lib/</span>       hexagon · easing · cn · rate-limit
+│  └─ <span class="d">validation/</span>contact.ts   <span class="c">zod compartido</span>
+├─ <span class="d">hooks/</span>     useLenis · useActiveSection · useWebGL
+│              usePointer · useMediaQuery
+├─ <span class="d">store/</span>     scene.ts   <span class="c">zustand: rubro, puntero, fase</span>
+├─ <span class="d">public/media/</span> projects · field · clients · brand
+│  └─ simbolo-v.svg       <span class="c">vectorización del símbolo</span>
+└─ .env.example           <span class="c">RESEND_API_KEY, CONTACT_TO</span></pre>
+
+      <div>
+        <div class="legend">
+          <span><i style="background:#fff"></i>Server Component</span>
+          <span><i style="background:#fff;border-color:var(--vicuna)"></i>Client ('use client')</span>
+          <span><i style="background:color-mix(in oklab,var(--celeste) 12%,white);border-color:var(--celeste)"></i>R3F / WebGL</span>
+        </div>
+        <div class="ctree">
+          <div class="node"><b>RootLayout</b> · fuentes, metadata</div>
+          <div class="children">
+            <div class="node client"><b>Providers</b> · Lenis + MotionConfig reducedMotion="user"</div>
+            <div class="children">
+              <div class="node client"><b>Preloader</b> · fase: loading → reveal → done</div>
+              <div class="node client"><b>Navbar</b> · useActiveSection, NavIndicator</div>
+              <div class="node three"><b>SceneCanvas</b> (fijo detrás del hero; <code>frameloop="demand"</code> fuera de vista)</div>
+              <div class="children">
+                <div class="node three">PreloaderV3D · Terrain · HexLens</div>
+                <div class="node three">worlds/* según rubro activo · Lighting</div>
+              </div>
+              <div class="node"><b>page.tsx</b></div>
+              <div class="children">
+                <div class="node"><b>Hero</b> → <span class="chipc">RubroSwitch</span> escribe en el store</div>
+                <div class="node"><b>Projects</b> (datos) → <span class="chipc">ProjectCarousel</span></div>
+                <div class="node"><b>Specialties</b> → <span class="chipc">SpecialtyPanel</span></div>
+                <div class="node"><b>Clients</b> → <span class="chipc">LogoMarquee</span></div>
+                <div class="node"><b>Contact</b> → <span class="chipc">ContactForm</span> → POST /api/contact</div>
+              </div>
+              <div class="node"><b>Footer</b></div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:13px;margin-top:16px"><strong>Puente DOM ↔ 3D:</strong> un store de <code>zustand</code> con <code>activeRubro</code>, <code>pointer</code>, <code>phase</code> y <code>heroInView</code>. El DOM escribe y la escena lee dentro de <code>useFrame</code>, así no hay re-renders de React por frame. "Quiero algo similar" escribe <code>prefillType</code> y hace scroll con Lenis hasta #contacto.</p>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-top:48px">
+      <div>
+        <h3>Presupuesto de rendimiento</h3>
+        <ul class="budget" style="font-size:14px;padding-left:18px">
+          <li>LCP ≤ 2,5 s en 4G: el titular del hero es HTML y se pinta antes que el Canvas. El preloader nunca bloquea el LCP del texto.</li>
+          <li>JS de three/R3F en un chunk diferido (≈ 160 KB gz). El resto de la página ≤ 90 KB gz.</li>
+          <li><code>dpr={[1, 1.75]}</code> + <code>PerformanceMonitor</code>: si baja de 50 fps reduce dpr, samples de transmisión y segmentos del relieve.</li>
+          <li>El Canvas se pausa (<code>frameloop</code> demand) cuando el hero sale de vista.</li>
+          <li>Imágenes con <code>next/image</code>, AVIF/WebP, <code>sizes</code> correctos y blur placeholder. Las fotos del PDF no pasan de 1400 px de ancho, así que se muestran a ese tamaño como máximo.</li>
+          <li>Sin WebGL, con reduced-motion o en GPU muy baja: <code>HeroFallback</code> estático (relieve en SVG + render de arquitectura en máscara hexagonal) con la misma composición.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Dependencias</h3>
+        <ul class="budget" style="font-size:14px;padding-left:18px">
+          <li><code>next</code>, <code>react</code>, <code>typescript</code>, <code>tailwindcss</code> v4 (tokens en <code>@theme</code>)</li>
+          <li><code>motion</code> (Framer Motion, <code>motion/react</code>): layout, AnimatePresence, useScroll</li>
+          <li><code>three</code>, <code>@react-three/fiber</code>, <code>@react-three/drei</code> (MeshTransmissionMaterial, Lightformer, Mask), <code>maath</code></li>
+          <li><code>lenis</code> (<code>lenis/react</code>)</li>
+          <li><code>zustand</code>, <code>react-hook-form</code>, <code>zod</code>, <code>@hookform/resolvers</code></li>
+          <li><code>resend</code> (envío del formulario; se puede cambiar por SMTP)</li>
+          <li><code>lucide-react</code> (iconos con un solo trazo)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="pendientes" style="border-bottom:0">
+  <div class="wrap">
+    <h2>Decisiones pendientes</h2>
+    <div class="pending">
+      <div><h3>Dominio</h3><p>El brochure dice <em>vicunaingerieros.com</em> y la guía <em>vicunaingenieros.com</em>. Hay que confirmar el correcto para metadata, OG y enlaces.</p></div>
+      <div><h3>Destino del formulario</h3><p>Correo receptor (¿proyectos@ o gerencia@?) y proveedor de envío (Resend por defecto). Se necesita la API key en <code>.env</code>.</p></div>
+      <div><h3>Fotos en alta</h3><p>Las imágenes del PDF miden 600–1400 px, por debajo de los 1600 px que pide la guía. Si existen los originales de renders y fotos de campo, el carrusel y las especialidades ganan mucho.</p></div>
+      <div><h3>Textos de proyectos</h3><p>Solo hay nombre y ubicación. Las descripciones breves se redactarán a partir del render y Vicuña deberá validarlas. No hay cifras, años ni testimonios, y no se inventarán.</p></div>
+      <div><h3>Logo vectorial</h3><p>Se vectorizará el símbolo "V" desde el raster de 492×504 para extruirlo. Si tienen el SVG o AI original, lo usamos y se garantiza la fidelidad.</p></div>
+      <div><h3>Redes sociales</h3><p>El brochure muestra los usuarios <em>vicunaingenieros</em>, <em>vicunaingenieros5</em> y "Vicuna Ingenieros &amp; Arquitectos", pero sin URL. Hay que confirmar a qué plataforma corresponde cada uno.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer class="doc"><div class="wrap">Vicuña Ingenieros · Landing v1 · documento de trabajo. Las imágenes se extrajeron del Brochure 2027 y se guardaron en <code>public/media/</code>.</div></footer>
+</body>
+</html>

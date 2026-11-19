@@ -1,0 +1,32 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "montserrat",
+        "createdAt": "2026-11-18T22:58:21.549Z",
+        "reason": "Brand guide Vicuña v1.0 mandates Montserrat for body/UI (Guia_de_Estilos p.07)"
+      },
+      {
+        "rule": "tiny-text",
+        "value": "*",
+        "files": [
+          "docs/wireframe.html"
+        ],
+        "createdAt": "2026-11-18T22:58:21.565Z",
+        "reason": "Annotation callouts inside scaled-down wireframe thumbnails in a planning doc; not product UI"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "docs/wireframe.html"
+        ],
+        "createdAt": "2026-11-18T22:58:21.577Z",
+        "reason": "Wireframe screen frames and diagram SVGs bleed to their edges by design in a planning doc"
+      }
+    ]
+  }
+}
